@@ -20,23 +20,23 @@ colors, and the layered sandwich renders.
 
 ## Run it
 
-It's a static page — serve the `prototype/` folder with any static server:
+It's a static page — serve the repo root with any static server:
 
 ```bash
-cd prototype
 python3 -m http.server 8137
 # open http://localhost:8137
 ```
 
+Live version (GitHub Pages): https://ada12001.github.io/bb-website/
+
 ## Structure
 
 ```
-prototype/
-  index.html            # the whole prototype (HTML + CSS + JS inline)
-  assets/
-    img/                # layered sandwich PNGs, sandwich cutouts, logos, floral patterns
-    fonts/              # brand fonts (DIN Round, Milkstore, Palm Canyon, Palmer Lake)
-00_Brand Assets/        # brand bible, logos, fonts, menus (reference)
+index.html              # the whole prototype (HTML + CSS + JS inline)
+assets/
+  img/                  # layered sandwich PNGs, sandwich cutouts, logos, floral patterns
+  fonts/                # brand fonts (DIN Round, Milkstore, Palm Canyon, Palmer Lake)
+00_Brand Assets/        # brand bible, logos, fonts (reference)
 ```
 
 > Prototype — work in progress.
