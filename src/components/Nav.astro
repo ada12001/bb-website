@@ -1,0 +1,16 @@
+---
+const links = [
+  { href: "/menu", label: "Menu" },
+  { href: "/story", label: "Our Story" },
+  { href: "/locations", label: "Locations" },
+];
+---
+<nav class="nav">
+  <a href="/" aria-label="Bossy Beulah's home">
+    <img class="logo" src="/img/logo-coral.png" alt="Bossy Beulah's Chicken Shack" />
+  </a>
+  <div class="nav-links">
+    {links.map((l) => <a href={l.href}>{l.label}</a>)}
+    <a href="/order" class="order-btn">Order Now</a>
+  </div>
+</nav>

@@ -1,0 +1,66 @@
+/* ============================================================
+   Bossy Beulah's — Design Tokens
+   Single source of truth for color, type, space, motion.
+   ============================================================ */
+:root {
+  /* ---- Brand palette (from the brand bible) ---- */
+  --coral:      #f05348;  /* PMS 178 — primary */
+  --navy:       #1e2349;  /* PMS 541/295 */
+  --mint:       #a0d8d1;  /* PMS 571 */
+  --peach:      #f4d9c5;  /* PMS 706 */
+  --cream:      #faf4ea;  /* warm paper */
+  --yellow:     #e5d72a;  /* PMS 3965 */
+  --salmon:     #f39887;  /* PMS 1625 */
+  --periwinkle: #b6b9db;  /* PMS 7444 */
+  --pink:       #ed63a3;  /* PMS 2038 */
+
+  /* ---- Neutrals ---- */
+  --ink:        #2a2622;  /* body text */
+  --ink-soft:   #6f675d;
+  --paper:      var(--cream);
+
+  /* ---- Semantic ---- */
+  --bg:         var(--cream);
+  --text:       var(--ink);
+  --accent:     var(--coral);
+
+  /* ---- Type families ---- */
+  --font-display: "Milkstore", Impact, sans-serif;     /* big textured headlines */
+  --font-script:  "Palm Canyon", "Palmer Lake", cursive; /* hand-script accents */
+  --font-body:    "DIN Round", system-ui, sans-serif;  /* UI + body */
+
+  /* ---- Type scale (fluid) ---- */
+  --step--1: clamp(0.78rem, 0.74rem + 0.2vw, 0.88rem);
+  --step-0:  clamp(0.95rem, 0.9rem + 0.25vw, 1.06rem);
+  --step-1:  clamp(1.2rem, 1.05rem + 0.6vw, 1.5rem);
+  --step-2:  clamp(1.6rem, 1.3rem + 1.2vw, 2.4rem);
+  --step-3:  clamp(2.2rem, 1.6rem + 2.6vw, 4rem);
+  --step-display: clamp(3.4rem, 1.5rem + 8vw, 9.4rem);
+
+  /* ---- Spacing scale ---- */
+  --space-2xs: 0.25rem;
+  --space-xs:  0.5rem;
+  --space-sm:  0.75rem;
+  --space-md:  1.25rem;
+  --space-lg:  2rem;
+  --space-xl:  3.25rem;
+  --space-2xl: 5.5rem;
+
+  /* ---- Radii ---- */
+  --radius-sm: 8px;
+  --radius-pill: 999px;
+
+  /* ---- Shadows ---- */
+  --shadow-food: 0 30px 30px rgba(60, 30, 20, 0.18);
+  --shadow-pill: 0 8px 20px rgba(240, 83, 72, 0.4);
+
+  /* ---- Motion ---- */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-io:  cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 0.18s;
+  --dur-med:  0.35s;
+
+  /* ---- Layout ---- */
+  --maxw: 1200px;
+  --nav-h: 70px;
+}

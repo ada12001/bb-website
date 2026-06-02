@@ -1,0 +1,23 @@
+[
+  { "id": "the-beaut", "category": "sandwiches", "name": "The Beaut", "description": "Fried chicken breast, Duke's mayo + pickles on a Copain bun.", "price": 8.99, "featured": true },
+  { "id": "the-cheesy-beaut", "category": "sandwiches", "name": "The Cheesy Beaut", "description": "\"The Beaut\" + baby Swiss.", "price": 9.99, "featured": true },
+  { "id": "hot-thigh", "category": "sandwiches", "name": "Hot Thigh Sandwich", "description": "Fried chicken thigh, Beaut's hot sauce, Duke's mayo + pickles on a Copain bun.", "price": 9.99, "featured": true },
+  { "id": "wings", "category": "chicken", "name": "Wings", "description": "5 piece.", "price": 9.99 },
+  { "id": "bossy-bites", "category": "chicken", "name": "Bossy Bites", "variants": [{ "label": "6 piece", "price": 7.99 }, { "label": "10 piece", "price": 10.99 }] },
+  { "id": "tenders", "category": "chicken", "name": "Tenders", "variants": [{ "label": "2 piece", "price": 6.99 }, { "label": "3 piece", "price": 9.99 }] },
+  { "id": "simple-salad", "category": "salads", "name": "Simple Salad", "description": "Your choice of crispy chicken breast, tenders, or bites.", "price": 13.99 },
+  { "id": "quinoa-salad", "category": "salads", "name": "Quinoa Salad", "description": "Your choice of crispy chicken breast, tenders, or bites.", "price": 13.99 },
+  { "id": "kids-snack-pack", "category": "kids", "name": "Kids Snack Pack", "description": "Crispy tenders or bites, fries or apple sauce + organic juice box.", "price": 7.99 },
+  { "id": "fries", "category": "sides", "name": "Fries", "description": "Hand-cut & hand-made.", "price": 4.99 },
+  { "id": "iredell-slaw", "category": "sides", "name": "Iredell Slaw", "price": 4.99 },
+  { "id": "cucumber-salad", "category": "sides", "name": "Cucumber Salad", "price": 4.99 },
+  { "id": "coke", "category": "drinks", "name": "Coca-Cola", "price": 2.99 },
+  { "id": "tea", "category": "drinks", "name": "Tea", "price": 2.99 },
+  { "id": "lemonade", "category": "drinks", "name": "Lemonade", "description": "Fresh squeezed.", "price": 3.99 },
+  { "id": "bossy-sauce", "category": "sauces", "name": "Bossy Sauce", "price": 0.99 },
+  { "id": "beauts-hot-sauce", "category": "sauces", "name": "Beaut's Hot Sauce", "price": 0.99 },
+  { "id": "carolina-gold", "category": "sauces", "name": "Carolina Gold", "price": 0.99 },
+  { "id": "ranch", "category": "sauces", "name": "Ranch", "price": 0.99 },
+  { "id": "chocolate-chunk-cookie", "category": "desserts", "name": "Chocolate Chunk Cookie", "price": 2.99 },
+  { "id": "apple-cinnamon-hand-pie", "category": "desserts", "name": "Apple Cinnamon Hand Pie", "price": 2.99 }
+]

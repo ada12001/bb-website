@@ -12,3 +12,11 @@
 
 # Heavy digital menu-board exports (reference only, not needed for the prototype)
 /00_Brand Assets/Menus/
+
+# Node / Astro
+node_modules/
+dist/
+.astro/
+.vercel/
+.env
+.env.*

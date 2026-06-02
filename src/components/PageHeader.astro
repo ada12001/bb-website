@@ -1,0 +1,19 @@
+---
+interface Props { kicker?: string; title: string; lead?: string; bg?: string; }
+const { kicker, title, lead, bg = "var(--cream)" } = Astro.props;
+---
+<header class="page-header" style={`--ph-bg:${bg}`}>
+  <div class="ph-inner">
+    {kicker && <p class="ph-kicker">{kicker}</p>}
+    <h1 class="ph-title" set:html={title}></h1>
+    {lead && <p class="ph-lead">{lead}</p>}
+  </div>
+</header>
+
+<style>
+  .page-header{background:var(--ph-bg);padding:calc(var(--nav-h) + 56px) 24px 56px;text-align:center}
+  .ph-inner{max-width:760px;margin:0 auto}
+  .ph-kicker{font-family:var(--font-script);color:var(--coral);font-size:clamp(22px,3vw,32px);transform:rotate(-2deg);margin-bottom:4px}
+  .ph-title{font-family:var(--font-display);color:var(--navy);font-size:clamp(40px,8vw,88px);line-height:.9}
+  .ph-lead{margin-top:16px;color:var(--ink-soft);font-weight:500;font-size:17px;line-height:1.6}
+</style>

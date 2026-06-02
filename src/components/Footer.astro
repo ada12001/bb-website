@@ -1,0 +1,25 @@
+---
+const cols = [
+  { h: "Eat", links: [["/menu","Menu"],["/order","Order"],["/catering","Catering"]] },
+  { h: "Beulah's", links: [["/story","Our Story"],["/locations","Locations"],["/careers","Careers"]] },
+];
+const year = 2026;
+---
+<footer class="site-footer">
+  <div class="inner">
+    <div>
+      <img src="/img/logo-white.png" alt="Bossy Beulah's Chicken Shack" />
+    </div>
+    <nav aria-label="Footer">
+      {cols.map((c) => (
+        <div>
+          <h5>{c.h}</h5>
+          {c.links.map(([href, label]) => <a href={href}>{label}</a>)}
+        </div>
+      ))}
+    </nav>
+  </div>
+  <div class="legal inner">
+    <span>© {year} Bossy Beulah's Chicken Shack · Made in Charlotte, NC by the Nobles</span>
+  </div>
+</footer>

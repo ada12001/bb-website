@@ -1,0 +1,20 @@
+---
+// Repeats the phrase set twice so the -50% scroll loops seamlessly.
+interface Props { items?: string[]; }
+const { items = [
+  "THE BOSSIER THE BETTER",
+  "RESPECT THE PICKLES",
+  "SINCE 1906",
+  "NO SUCH THING AS TOO MANY PICKLES",
+] } = Astro.props;
+const loop = [...items, ...items];
+---
+<div class="marquee" aria-hidden="true">
+  <div class="track">
+    {loop.map((t, i) => (
+      <>
+        <span class={i % 2 === 0 ? "c" : ""}>{t}</span><span>&#10022;</span>
+      </>
+    ))}
+  </div>
+</div>

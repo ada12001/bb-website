@@ -1,0 +1,35 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHeader from "../components/PageHeader.astro";
+import { getCollection } from "astro:content";
+const locations = await getCollection("locations");
+---
+<Base title="Locations — Bossy Beulah's" description="Find your nearest Bossy Beulah's Chicken Shack.">
+  <PageHeader kicker="come on in" title="LOCATIONS" bg="var(--periwinkle)" />
+
+  <div class="locs">
+    {locations.map((l) => (
+      <div class="loc">
+        <h2>{l.data.name}</h2>
+        <p class="addr">{l.data.address}<br />{l.data.city}</p>
+        {l.data.hours && <p class="hours">{l.data.hours}</p>}
+        {l.data.phone && <p><a href={`tel:${l.data.phone}`}>{l.data.phone}</a></p>}
+        {l.data.mapUrl
+          ? <a class="btn" href={l.data.mapUrl}>Get directions</a>
+          : <span class="soon">Details coming soon</span>}
+        {l.data.placeholder && <p class="note">Placeholder — confirm real address, hours &amp; map link.</p>}
+      </div>
+    ))}
+  </div>
+</Base>
+
+<style>
+  .locs{max-width:var(--maxw);margin:0 auto;padding:56px 24px 96px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:28px}
+  .loc{background:#fff;border:1px solid #efe7da;border-radius:14px;padding:28px}
+  .loc h2{font-family:var(--font-display);color:var(--navy);font-size:24px;margin-bottom:10px}
+  .addr{color:var(--ink);font-weight:500;line-height:1.5}
+  .hours{color:var(--ink-soft);margin-top:8px}
+  .loc .btn{margin-top:16px}
+  .soon{display:inline-block;margin-top:16px;color:var(--ink-soft);font-style:italic}
+  .note{margin-top:14px;font-size:12px;color:var(--coral)}
+</style>

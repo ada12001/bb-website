@@ -1,0 +1,21 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHeader from "../components/PageHeader.astro";
+---
+<Base title="Our Story — Bossy Beulah's" description="Five generations of chicken-sandwich makers, in honor of our great Aunt Beaut. Born 1906.">
+  <PageHeader kicker="you can get away with being bossy when you're right" title="OUR STORY" bg="var(--mint)" />
+
+  <article class="story">
+    <p class="lead">Bossy Beulah's is the culmination of five solid generations of chicken sandwich makers.</p>
+    <p>Our great Aunt Beaut, born in 1906, is the one who elevated our family's chicken sandwich craft to an art form. We fondly dubbed her Bossy, but as Aunt Beaut was famous for saying, <em>"You can get away with being bossy when you're right."</em> And Bossy Beaut was always right — especially when it came to making her world-famous fried chicken sammie.</p>
+    <p>In the spirit of Aunt Beaut, we are one thing… a no-nonsense chicken sandwich. Our all-natural chicken is served spanking-fresh, dipped in buttermilk and breaded by hand to seal in the juices. We add just enough seasoning to complement the natural flavor without stealing the show (because nobody likes a show-off). To top it off, we pair it with a potato bun, signature house-made pickles, and mayo — Duke's, of course.</p>
+    <p>Everything we do is in honor of our great Aunt Beaut. Her legacy is the heart and soul behind Bossy Beulah's simplistic menu, bold brand, and inviting space. That's exactly how Bossy would've liked it. And like we said — Bossy is always right.</p>
+  </article>
+</Base>
+
+<style>
+  .story{max-width:680px;margin:0 auto;padding:56px 24px 96px}
+  .story .lead{font-family:var(--font-display);color:var(--coral);font-size:clamp(24px,4vw,34px);line-height:1.1;margin-bottom:24px}
+  .story p{font-size:18px;line-height:1.7;color:var(--ink);margin-bottom:20px}
+  .story em{font-style:italic;color:var(--navy)}
+</style>

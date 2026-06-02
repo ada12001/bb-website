@@ -1,0 +1,41 @@
+---
+import "../styles/global.css";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** hide chrome for the immersive home hero if ever needed */
+  bare?: boolean;
+}
+const {
+  title = "Bossy Beulah's Chicken Shack",
+  description = "Five generations of no-nonsense fried chicken. The Bossier the Better. Charlotte, NC — since 1906.",
+  bare = false,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+---
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#f05348" />
+    <link rel="icon" href="/img/logo-coral.png" />
+  </head>
+  <body>
+    {!bare && <Nav />}
+    <main>
+      <slot />
+    </main>
+    {!bare && <Footer />}
+  </body>
+</html>
