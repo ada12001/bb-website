@@ -1,0 +1,14 @@
+# OS
+.DS_Store
+
+# Large raw source assets (not needed to run the prototype — it has its own copies in prototype/assets)
+/1_Stills/
+/BulkResizePhotos.com (10)/
+/Beaut Layered/
+/existing-web-assets/
+*.psd
+/The-Beaut_Hero.png
+/The-Beaut_Hero.psd
+
+# Heavy digital menu-board exports (reference only, not needed for the prototype)
+/00_Brand Assets/Menus/

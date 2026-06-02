@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bossy Beulah's — Build the Beaut</title>
+<style>
+  /* ---------- Brand fonts ---------- */
+  @font-face{font-family:"DIN Round";src:url("assets/fonts/DINRoundPro-Regular.otf");font-weight:400;font-display:swap}
+  @font-face{font-family:"DIN Round";src:url("assets/fonts/DINRoundPro-Medium.otf");font-weight:500;font-display:swap}
+  @font-face{font-family:"DIN Round";src:url("assets/fonts/DINRoundPro-Bold.otf");font-weight:700;font-display:swap}
+  @font-face{font-family:"Milkstore";src:url("assets/fonts/Milkstore02-Textured.ttf");font-display:swap}
+  @font-face{font-family:"Palm Canyon";src:url("assets/fonts/PalmCanyonDrive-Regular.otf");font-display:swap}
+  @font-face{font-family:"Palmer Lake";src:url("assets/fonts/PalmerLakePrint-Regular.ttf");font-display:swap}
+
+  /* ---------- Brand palette ---------- */
+  :root{
+    --coral:#f05348;
+    --navy:#1e2349;
+    --mint:#a0d8d1;
+    --peach:#f4d9c5;
+    --cream:#faf4ea;
+    --yellow:#e5d72a;
+    --pink:#ed63a3;
+    --ink:#2a2622;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:auto}
+  body{
+    font-family:"DIN Round",system-ui,sans-serif;
+    color:var(--ink);
+    background:var(--cream);
+    overflow-x:hidden;
+  }
+
+  /* ---------- Top nav ---------- */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 28px;
+    mix-blend-mode:normal;
+  }
+  nav .logo{height:34px}
+  nav .nav-links{display:flex;gap:26px;align-items:center}
+  nav a{
+    font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+    font-size:12px;color:var(--navy);text-decoration:none;
+  }
+  nav .order-btn{
+    background:var(--coral);color:#fff;padding:10px 18px;border-radius:999px;
+    box-shadow:0 6px 18px rgba(240,83,72,.35);
+  }
+  @media(max-width:640px){ nav .nav-links a:not(.order-btn){display:none} }
+
+  /* ---------- Intro ---------- */
+  .intro{
+    height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;position:relative;
+    background:
+      radial-gradient(120% 90% at 50% -10%, var(--peach) 0%, var(--cream) 55%);
+  }
+  .intro .eyebrow{
+    font-family:"Palm Canyon",cursive;color:var(--coral);
+    font-size:clamp(26px,4vw,42px);margin-bottom:6px;transform:rotate(-3deg);
+  }
+  .intro h1{
+    font-family:"Milkstore";
+    font-size:clamp(54px,12vw,150px);line-height:.86;color:var(--navy);
+    letter-spacing:.01em;
+  }
+  .intro h1 .pop{color:var(--coral)}
+  .intro p{
+    margin-top:18px;max-width:520px;font-size:16px;color:#6f675d;font-weight:500;
+    padding:0 20px;
+  }
+  .scrollcue{
+    position:absolute;bottom:30px;left:50%;transform:translateX(-50%);
+    font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:700;color:var(--navy);
+    display:flex;flex-direction:column;align-items:center;gap:8px;opacity:.8;
+  }
+  .scrollcue .arrow{width:1px;height:34px;background:var(--navy);position:relative;animation:dripline 1.8s infinite}
+  @keyframes dripline{0%{transform:scaleY(.3);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}100%{transform:scaleY(.3);transform-origin:bottom}}
+
+  /* ---------- Build + Menu-rail section (the star) ---------- */
+  .build{position:relative;height:900vh;background:var(--cream)}
+  .stage{
+    position:sticky;top:0;height:100vh;overflow:hidden;
+    display:flex;align-items:center;justify-content:center;
+  }
+
+  /* giant kinetic word behind the sandwich */
+  .bgword{
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    font-family:"Milkstore";
+    font-size:clamp(96px,25vw,360px);line-height:.8;color:var(--navy);
+    opacity:.24;white-space:nowrap;pointer-events:none;
+    text-align:center;letter-spacing:.02em;z-index:1;
+    transition:opacity .25s linear,color .25s linear;
+  }
+
+  /* the sandwich stack */
+  .sandwich{
+    position:relative;
+    width:min(90vh,680px);height:min(90vh,680px);
+    z-index:5;
+    filter:drop-shadow(0 30px 30px rgba(60,30,20,.18));
+  }
+  .sandwich .layer{
+    position:absolute;inset:0;width:100%;height:100%;
+    object-fit:contain;will-change:transform,opacity;
+  }
+  /* z-order, front -> back (per source PSD), with each contact shadow layered
+     ON TOP of the element that casts it:
+     Top_Bun_Upper > Pickles_Shadow > Pickles > Chicken_Shadow > Chicken > Bottom_Bun > Top_Bun_Lower.
+     Top_Bun_Lower is the backmost depth-double but scrolls in sync with Top_Bun_Upper. */
+  .l-tblower{z-index:1}    /* backmost depth double */
+  .l-bottom{z-index:2}
+  .l-chicken{z-index:3}
+  .l-chshadow{z-index:4}   /* chicken's shadow, on top of the chicken */
+  .l-pickles{z-index:5}
+  .l-pkshadow{z-index:6}   /* pickles' shadow, on top of the pickles */
+  .l-tbupper{z-index:7}    /* frontmost */
+
+  /* ingredient recipe checklist */
+  .recipe{
+    position:absolute;left:max(28px,4vw);top:50%;transform:translateY(-50%);
+    z-index:20;width:230px;
+  }
+  .recipe h4{
+    font-family:"DIN Round";font-weight:700;text-transform:uppercase;letter-spacing:.14em;
+    font-size:11px;color:var(--coral);margin-bottom:16px;
+  }
+  .recipe li{
+    list-style:none;display:flex;align-items:center;gap:11px;margin:13px 0;
+    font-weight:500;font-size:15px;color:#b8afa3;
+    transition:color .35s ease,transform .35s ease;
+  }
+  .recipe li .dot{
+    width:15px;height:15px;border-radius:50%;border:2px solid #cfc6ba;
+    flex:0 0 auto;transition:all .35s ease;position:relative;
+  }
+  .recipe li.on{color:var(--navy);transform:translateX(4px)}
+  .recipe li.on .dot{background:var(--coral);border-color:var(--coral)}
+  .recipe li.on .dot::after{
+    content:"";position:absolute;left:3px;top:0px;width:4px;height:8px;
+    border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg);
+  }
+  @media(max-width:820px){ .recipe{display:none} }
+
+  /* progress rail */
+  .prail{
+    position:absolute;right:max(26px,3.5vw);top:50%;transform:translateY(-50%);
+    height:200px;width:4px;background:rgba(30,35,73,.12);border-radius:4px;z-index:20;
+  }
+  .prail .fill{position:absolute;top:0;left:0;width:100%;background:var(--coral);border-radius:4px;height:0%}
+  @media(max-width:820px){ .prail{display:none} }
+
+  /* final tagline that fades in when built */
+  .built-tag{
+    position:absolute;bottom:7vh;left:50%;transform:translateX(-50%);
+    z-index:20;text-align:center;opacity:0;pointer-events:none;
+  }
+  .built-tag .name{font-family:"Milkstore";font-size:clamp(34px,6vw,64px);color:var(--coral);line-height:.9}
+  .built-tag .sub{font-family:"Palm Canyon",cursive;font-size:clamp(20px,3vw,30px);color:var(--navy);margin-top:2px}
+
+  /* ---------- Menu rail (slides in after the Beaut assembles) ---------- */
+  .rname{
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    font-family:"Milkstore";font-size:clamp(72px,18vw,280px);line-height:.8;
+    white-space:nowrap;text-align:center;letter-spacing:.02em;
+    z-index:1;opacity:0;pointer-events:none;will-change:transform,opacity;
+  }
+  #rname1{color:var(--coral)}   /* on mint panel */
+  #rname2{color:var(--navy)}    /* on coral panel */
+  .rimg{
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    width:min(102vh,780px);height:min(102vh,780px);z-index:5;opacity:0;
+    will-change:transform,opacity;
+    filter:drop-shadow(0 30px 30px rgba(45,25,15,.3));
+  }
+  .rimg img{ width:100%;height:100%;object-fit:contain; }
+  .rcopy{
+    position:absolute;left:max(28px,4vw);top:50%;transform:translateY(-50%);
+    z-index:20;width:300px;opacity:0;will-change:transform,opacity;
+  }
+  .rcopy .rc-kicker{font-family:"Palm Canyon",cursive;font-size:26px;color:var(--coral);margin-bottom:2px;transform:rotate(-2deg)}
+  .rcopy .rc-name{font-family:"Milkstore";font-size:36px;line-height:.95;color:var(--navy);margin-bottom:12px}
+  .rcopy .rc-desc{font-size:14px;font-weight:500;line-height:1.55;color:#4a463f;margin-bottom:16px}
+  .rcopy .rc-price{font-weight:700;font-size:19px;color:var(--navy);margin-bottom:20px}
+  .rcopy .rc-price span{font-weight:500;font-size:11px;color:#8a8478;text-transform:uppercase;letter-spacing:.06em}
+  .rcopy .rc-btn{
+    background:var(--coral);color:#fff;border:none;border-radius:999px;cursor:pointer;
+    font-family:"DIN Round";font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+    font-size:12px;padding:13px 26px;box-shadow:0 8px 20px rgba(240,83,72,.4);
+  }
+  /* Hot Thigh card sits on the bold coral panel -> light text + navy button */
+  #rcopy2 .rc-kicker{color:var(--navy)}
+  #rcopy2 .rc-name{color:#fff}
+  #rcopy2 .rc-desc{color:#ffe9e4}
+  #rcopy2 .rc-price{color:#fff}
+  #rcopy2 .rc-price span{color:#ffd6cf}
+  #rcopy2 .rc-btn{background:var(--navy);box-shadow:0 8px 20px rgba(30,35,73,.4)}
+  @media(max-width:820px){ .rcopy{display:none} }
+
+  /* floral "curtain" that wipes across during each slide transition */
+  .curtain{
+    position:absolute;top:0;left:50%;height:100%;width:165vw;
+    transform:translateX(-50%);z-index:50;opacity:0;pointer-events:none;
+    background-repeat:repeat;background-position:center;background-size:440px auto;
+    will-change:transform,opacity;
+    /* feather the leading/trailing edges so the wipe fades softly instead of a hard line */
+    -webkit-mask-image:linear-gradient(to right, transparent 0%, #000 17%, #000 83%, transparent 100%);
+    mask-image:linear-gradient(to right, transparent 0%, #000 17%, #000 83%, transparent 100%);
+  }
+
+  /* nav flips to light over a bold/saturated panel (e.g. the coral Hot Thigh slide) */
+  body.nav-light nav a:not(.order-btn){color:#fff}
+  body.nav-light nav .order-btn{background:var(--navy);box-shadow:0 6px 18px rgba(30,35,73,.4)}
+
+  /* ---------- Marquee ---------- */
+  .marquee{
+    background:var(--navy);color:var(--cream);overflow:hidden;white-space:nowrap;
+    padding:18px 0;border-top:3px solid var(--coral);border-bottom:3px solid var(--coral);
+  }
+  .marquee .track{display:inline-block;animation:scrollx 22s linear infinite;font-family:"Milkstore";font-size:30px;letter-spacing:.03em}
+  .marquee .track span{margin:0 26px;color:var(--cream)}
+  .marquee .track span.c{color:var(--coral)}
+  @keyframes scrollx{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  /* ---------- Outro ---------- */
+  .outro{
+    background:var(--mint);padding:90px 24px 110px;text-align:center;
+    display:flex;flex-direction:column;align-items:center;
+  }
+  .outro .kicker{font-family:"Palm Canyon",cursive;color:var(--coral);font-size:30px;transform:rotate(-2deg)}
+  .outro h2{font-family:"Milkstore";font-size:clamp(40px,8vw,96px);color:var(--navy);line-height:.9;margin:6px 0 18px}
+  .outro p{max-width:560px;color:#274a46;font-weight:500;font-size:17px;line-height:1.6}
+  .outro .cta{
+    margin-top:30px;background:var(--coral);color:#fff;font-weight:700;text-transform:uppercase;
+    letter-spacing:.1em;font-size:14px;padding:16px 40px;border-radius:999px;border:none;cursor:pointer;
+    box-shadow:0 10px 24px rgba(240,83,72,.4);
+  }
+  footer{background:var(--navy);text-align:center;padding:40px 20px}
+  footer img{height:40px;opacity:.95}
+  footer p{color:#9aa0c4;font-size:12px;margin-top:14px;letter-spacing:.05em}
+</style>
+</head>
+<body>
+
+  <nav>
+    <img class="logo" src="assets/img/logo-coral.png" alt="Bossy Beulah's" />
+    <div class="nav-links">
+      <a href="#">Menu</a>
+      <a href="#">Our Story</a>
+      <a href="#">Locations</a>
+      <a href="#" class="order-btn">Order Now</a>
+    </div>
+  </nav>
+
+  <!-- INTRO -->
+  <section class="intro">
+    <div class="eyebrow">Since 1906 &middot; respect the pickles</div>
+    <h1>BUILD<br>THE <span class="pop">BEAUT</span></h1>
+    <p>Five generations of no-nonsense fried chicken. Scroll on down and stack it yourself — bun, bird, pickles, Duke's, and all.</p>
+    <div class="scrollcue"><span>Scroll to build</span><span class="arrow"></span></div>
+  </section>
+
+  <!-- BUILD -->
+  <section class="build" id="build">
+    <div class="stage" id="stage">
+      <div class="curtain" id="curtain"></div>
+      <div class="bgword" id="bgword">BUN</div>
+
+      <ul class="recipe" id="recipe">
+        <h4>Building the Beaut</h4>
+        <li data-i="0"><span class="dot"></span>Toasted potato bun</li>
+        <li data-i="1"><span class="dot"></span>All-natural fried chicken</li>
+        <li data-i="2"><span class="dot"></span>Power of the pickles</li>
+        <li data-i="3"><span class="dot"></span>Duke's mayo + top</li>
+        <li data-i="4"><span class="dot"></span>The Beaut, served</li>
+      </ul>
+
+      <div class="sandwich" id="sandwich">
+        <img class="layer l-tblower"  id="topBunLower"  src="assets/img/top-bun-lower.png"  alt="">
+        <img class="layer l-bottom"   id="bottomBun"    src="assets/img/bottom-bun.png"     alt="bottom bun">
+        <img class="layer l-chshadow" id="chickenShadow" src="assets/img/chicken-shadow.png" alt="">
+        <img class="layer l-chicken"  id="chicken"      src="assets/img/chicken.png"        alt="fried chicken">
+        <img class="layer l-pkshadow" id="picklesShadow" src="assets/img/pickles-shadow.png" alt="">
+        <img class="layer l-pickles"  id="pickles"      src="assets/img/pickles.png"        alt="pickles">
+        <img class="layer l-tbupper"  id="topBunUpper"  src="assets/img/top-bun-upper.png"  alt="top bun">
+      </div>
+
+      <div class="prail"><div class="fill" id="prailFill"></div></div>
+
+      <div class="built-tag" id="builtTag">
+        <div class="name">THE BEAUT</div>
+        <div class="sub">The Bossier the Better.</div>
+      </div>
+
+      <!-- MENU RAIL — big kinetic names (behind) -->
+      <div class="rname" id="rname1">CHEESY BEAUT</div>
+      <div class="rname" id="rname2">HOT THIGH</div>
+
+      <!-- MENU RAIL — sandwich photos -->
+      <div class="rimg" id="rimg1"><img src="assets/img/cheesy-beaut.png" alt="The Cheesy Beaut"></div>
+      <div class="rimg" id="rimg2"><img src="assets/img/hot-thigh.png" alt="Hot Thigh Sandwich"></div>
+
+      <!-- MENU RAIL — copy cards -->
+      <div class="rcopy" id="rcopy1">
+        <div class="rc-kicker">cheese, please</div>
+        <div class="rc-name">The Cheesy Beaut</div>
+        <div class="rc-desc">"The Beaut" plus baby Swiss. Same no-nonsense bird, now with a melt.</div>
+        <div class="rc-price">9.99 <span>· combo +5.99</span></div>
+        <button class="rc-btn">Add to order</button>
+      </div>
+      <div class="rcopy" id="rcopy2">
+        <div class="rc-kicker">bring the heat</div>
+        <div class="rc-name">Hot Thigh Sandwich</div>
+        <div class="rc-desc">Juicy fried thigh, Beaut's hot sauce, Duke's mayo &amp; pickles on a potato bun.</div>
+        <div class="rc-price">9.99 <span>· combo +5.99</span></div>
+        <button class="rc-btn">Add to order</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee">
+    <div class="track">
+      <span class="c">THE BOSSIER THE BETTER</span><span>&#10022;</span>
+      <span>RESPECT THE PICKLES</span><span class="c">&#10022;</span>
+      <span>SINCE 1906</span><span>&#10022;</span>
+      <span class="c">NO SUCH THING AS TOO MANY PICKLES</span><span>&#10022;</span>
+      <span class="c">THE BOSSIER THE BETTER</span><span>&#10022;</span>
+      <span>RESPECT THE PICKLES</span><span class="c">&#10022;</span>
+      <span>SINCE 1906</span><span>&#10022;</span>
+      <span class="c">NO SUCH THING AS TOO MANY PICKLES</span><span>&#10022;</span>
+    </div>
+  </div>
+
+  <!-- OUTRO -->
+  <section class="outro">
+    <div class="kicker">made in Charlotte by the Nobles</div>
+    <h2>SAY HELLO<br>TO THE BEAUT</h2>
+    <p>Spanking-fresh chicken, dipped in buttermilk and breaded by hand to seal in the juices. Potato bun, house-made pickles, and Duke's — of course. Just enough seasoning, never a show-off.</p>
+    <button class="cta">Order Yours</button>
+  </section>
+
+  <footer>
+    <img src="assets/img/logo-white.png" alt="Bossy Beulah's">
+    <p>PROTOTYPE &middot; BUILD-A-BEAUT SCROLL CONCEPT</p>
+  </footer>
+
+<script>
+  // ---------- helpers ----------
+  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+  const inv=(p,a,b)=>clamp((p-a)/(b-a),0,1);          // local 0..1 over [a,b]
+  const lerp=(a,b,t)=>a+(b-a)*t;
+  const easeOutCubic=t=>1-Math.pow(1-t,3);
+  const easeOutBack=t=>{const c1=1.70158,c3=c1+1;return 1+c3*Math.pow(t-1,3)+c1*Math.pow(t-1,2);};
+
+  const build   = document.getElementById('build');
+  const stage   = document.getElementById('stage');
+  const bgword  = document.getElementById('bgword');
+  const recipe  = [...document.querySelectorAll('#recipe li')];
+  const prail   = document.getElementById('prailFill');
+  const builtTag= document.getElementById('builtTag');
+
+  const topBunLower   = document.getElementById('topBunLower');
+  const bottomBun     = document.getElementById('bottomBun');
+  const chickenShadow = document.getElementById('chickenShadow');
+  const chicken       = document.getElementById('chicken');
+  const picklesShadow = document.getElementById('picklesShadow');
+  const pickles       = document.getElementById('pickles');
+  const topBunUpper   = document.getElementById('topBunUpper');
+
+  const sandwichEl = document.getElementById('sandwich');
+  const recipeEl   = document.getElementById('recipe');
+  const prailBox   = document.querySelector('.prail');
+  const railNames  = [document.getElementById('rname1'), document.getElementById('rname2')];
+  const railImgs   = [document.getElementById('rimg1'),  document.getElementById('rimg2')];
+  const railCopy   = [document.getElementById('rcopy1'), document.getElementById('rcopy2')];
+
+  // background tint shifts subtly as the build progresses
+  const stages = [
+    {to:0.20, bg:'#faf4ea', word:'BUN'},
+    {to:0.44, bg:'#f7ece0', word:'CHICKEN'},
+    {to:0.66, bg:'#eef3ec', word:'PICKLES'},
+    {to:0.92, bg:'#f3ece3', word:"DUKE'S MAYO"},
+    {to:1.01, bg:'#f7e9df', word:'THE BEAUT'},
+  ];
+
+  // ----- menu rail config -----
+  const RAIL_START = 0.50;                 // P where the Beaut is fully built; rail begins
+  // brand-bible panels: Beaut(cream) -> Cheesy(mint) -> Hot Thigh(coral)
+  const PANELS = [[250,244,234],[160,216,209],[240,83,72]];
+  const logoImg = document.querySelector('nav .logo');
+  const easeIO=t=>t<0.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+
+  // Pacing: each sandwich DWELLS in centre, then EASES to the next (cinematic, not linear).
+  // rail 0..1 -> pos 0..2 with hold zones at each centre.
+  function railToPos(r){
+    if(r<0.12) return 0;                         // hold the freshly-built Beaut
+    if(r<0.44) return easeIO((r-0.12)/0.32);     // ease Beaut -> Cheesy
+    if(r<0.56) return 1;                          // hold Cheesy
+    if(r<0.88) return 1+easeIO((r-0.56)/0.32);   // ease Cheesy -> Hot Thigh
+    return 2;                                     // hold Hot Thigh
+  }
+
+  // ----- floral curtain -----
+  const curtain = document.getElementById('curtain');
+  // each transition gets one of the brand rose patterns; [railP start, end, pattern]
+  const CURTAINS = [
+    [0.12, 0.44, 'assets/img/floral-peach.png'],   // Beaut -> Cheesy
+    [0.56, 0.88, 'assets/img/floral-mint.png'],    // Cheesy -> Hot Thigh
+  ];
+
+  function render(P){
+    // ===================================================================
+    // PHASE A — assemble the Beaut (driven by aP), PHASE B — menu rail (railP)
+    // ===================================================================
+    const aP     = inv(P,0,RAIL_START);     // assembly progress 0..1
+    const railOn = P > RAIL_START;
+    const railP  = inv(P,RAIL_START,1);     // rail progress 0..1
+    const pos    = railToPos(railP);        // 0=Beaut centred, 1=Cheesy, 2=Hot Thigh (dwell + ease)
+    const vw     = window.innerWidth;
+
+    // ---- assembly: pure vertical stacking, all driven by aP ----
+    bottomBun.style.opacity = inv(aP,0.00,0.10);
+    bottomBun.style.transform = `translateY(${lerp(130,0,easeOutCubic(inv(aP,0.00,0.18)))}px)`;
+    chicken.style.opacity = inv(aP,0.20,0.30);
+    chicken.style.transform = `translateY(${lerp(-700,0,easeOutCubic(inv(aP,0.20,0.44)))}px)`;
+    chickenShadow.style.opacity = inv(aP,0.36,0.46);
+    pickles.style.opacity = inv(aP,0.46,0.56);
+    pickles.style.transform = `translateY(${lerp(-700,0,easeOutCubic(inv(aP,0.46,0.66)))}px)`;
+    picklesShadow.style.opacity = inv(aP,0.60,0.70);
+    const topY  = lerp(-760,0,easeOutCubic(inv(aP,0.70,0.92)));
+    const topOp = inv(aP,0.70,0.80);
+    topBunLower.style.opacity = topOp; topBunUpper.style.opacity = topOp;
+    topBunLower.style.transform = `translateY(${topY}px)`;
+    topBunUpper.style.transform = `translateY(${topY}px)`;
+    const done = inv(aP,0.92,1);
+
+    // checklist + progress rail track the assembly
+    const thresholds=[0.09,0.30,0.58,0.84,0.96];
+    recipe.forEach((li,i)=>li.classList.toggle('on', aP>=thresholds[i]));
+    prail.style.height = (aP*100).toFixed(1)+'%';
+
+    // ===================================================================
+    // RAIL geometry — each slide is a 100vw step; x-offset by distance from centre
+    // ===================================================================
+    const off      = i => (i - pos) * vw;                                       // horizontal travel
+    const scl      = i => lerp(0.86, 1, clamp(1 - Math.abs(i - pos), 0, 1));     // scale into focus
+    // steep fades so a slide is fully gone BEFORE the next one centres (no cross-slide overlap)
+    const fadeImg  = i => clamp(1.25 - Math.abs(i-pos)*1.40, 0, 1);
+    const fadeName = i => clamp(1.15 - Math.abs(i-pos)*1.75, 0, 1);
+    const fadeCopy = i => clamp(1.20 - Math.abs(i-pos)*1.55, 0, 1);
+
+    // -- Beaut group (slide 0): sandwich + checklist + tagline + big name slide out left --
+    const ox0 = railOn ? off(0) : 0;
+    sandwichEl.style.transform = `translateX(${ox0}px) scale(${(lerp(1,1.03,easeOutCubic(done))*(railOn?scl(0):1)).toFixed(3)})`;
+    sandwichEl.style.opacity = railOn ? fadeImg(0) : 1;
+    recipeEl.style.transform = `translate(${ox0}px,-50%)`;
+    recipeEl.style.opacity = railOn ? fadeCopy(0) : 1;
+    builtTag.style.transform = `translateX(calc(-50% + ${ox0}px)) translateY(${lerp(20,0,easeOutCubic(done))}px)`;
+    builtTag.style.opacity = railOn ? fadeCopy(0) : done;
+    prailBox.style.opacity = railOn ? fadeCopy(0) : 1;
+    bgword.style.transform = `translate(calc(-50% + ${ox0*0.6}px),-50%)`;
+    bgword.style.opacity = (railOn ? fadeName(0) : 1) * 0.24;
+
+    // -- Cheesy (slide 1) & Hot Thigh (slide 2) --
+    for(let k=0;k<2;k++){
+      const i = k+1;
+      railNames[k].style.transform = `translate(calc(-50% + ${off(i)*0.6}px),-50%)`;
+      railNames[k].style.opacity   = (railOn ? fadeName(i) : 0) * 0.55;
+      railImgs[k].style.transform  = `translate(calc(-50% + ${off(i)}px),-50%) scale(${scl(i).toFixed(3)})`;
+      railImgs[k].style.opacity    = railOn ? fadeImg(i) : 0;
+      railCopy[k].style.transform  = `translate(${off(i)}px,-50%)`;
+      railCopy[k].style.opacity    = railOn ? fadeCopy(i) : 0;
+    }
+
+    // ----- floral curtain: wipes right->left across each transition, hiding the swap -----
+    let curtainOn=false;
+    if(railOn){
+      for(const [a,b,img] of CURTAINS){
+        if(railP>=a && railP<=b){
+          curtainOn=true;
+          const tFrac=easeIO((railP-a)/(b-a));
+          const Wb=1.65*vw;                                    // band wider than viewport -> full cover at mid
+          const offX=lerp((vw+Wb)/2, -(vw+Wb)/2, tFrac);       // off-right -> cover -> off-left
+          curtain.style.transform=`translateX(calc(-50% + ${offX.toFixed(1)}px))`;
+          const want=`url("${img}")`;
+          if(curtain.style.backgroundImage!==want) curtain.style.backgroundImage=want;
+          break;
+        }
+      }
+    }
+    curtain.style.opacity = curtainOn ? 0.28 : 0;   // subtle translucent wash, not a solid cover
+
+    // ===================================================================
+    // background panel + kinetic word + nav theme
+    // ===================================================================
+    let panelRGB;
+    if(!railOn){
+      const st = stages.find(s=>aP<s.to) || stages[stages.length-1];
+      stage.style.backgroundColor = st.bg;
+      if(bgword.textContent!==st.word) bgword.textContent = st.word;
+      panelRGB = [250,244,234];                        // phase-A tints are all light
+    } else {
+      const seg = clamp(Math.floor(pos),0,PANELS.length-2), t=clamp(pos-seg,0,1);
+      panelRGB = [0,1,2].map(j=>Math.round(lerp(PANELS[seg][j],PANELS[seg+1][j],t)));
+      stage.style.backgroundColor = `rgb(${panelRGB[0]},${panelRGB[1]},${panelRGB[2]})`;
+    }
+    // flip nav + logo to light when the panel gets bold/saturated (the coral Hot Thigh slide)
+    const lum = (0.299*panelRGB[0]+0.587*panelRGB[1]+0.114*panelRGB[2])/255;
+    const navLight = lum < 0.56;
+    document.body.classList.toggle('nav-light', navLight);
+    const wantLogo = navLight ? 'assets/img/logo-white.png' : 'assets/img/logo-coral.png';
+    if(!logoImg.getAttribute('src').endsWith(wantLogo)) logoImg.setAttribute('src', wantLogo);
+  }
+
+  function onScroll(){
+    const total = build.offsetHeight - window.innerHeight;
+    const p = clamp(-build.getBoundingClientRect().top/total,0,1);
+    render(p);
+  }
+
+  let ticking=false;
+  window.addEventListener('scroll',()=>{
+    if(!ticking){requestAnimationFrame(()=>{onScroll();ticking=false});ticking=true;}
+  },{passive:true});
+  window.addEventListener('resize',onScroll);
+  window.addEventListener('load',onScroll);
+  onScroll();
+</script>
+</body>
+</html>
