@@ -160,10 +160,14 @@ const trays = [
     let sp = 0, ticking = false;
 
     const apply = () => {
-      far.style.transform = `translate3d(0, ${(sp * 18).toFixed(1)}px, 0)`;   // back wall recedes (slowest)
-      fg.style.transform = `translate3d(0, ${(-sp * 78).toFixed(1)}px, 0)`;   // counter + food lift (playful)
-      copy.style.setProperty("--cpy", `${(-sp * 122).toFixed(1)}px`);          // copy drifts up...
-      copy.style.opacity = String(clamp(1 - sp * 1.25, 0, 1));                 // ...and fades
+      // back wall recedes (slowest)
+      far.style.transform = `translate3d(0, ${(sp * 20).toFixed(1)}px, 0)`;
+      // foreground lifts AND scales up a touch — the scale keeps the counter covering
+      // the bottom edge so no dark gap is revealed (reads as the food rising toward you).
+      const fgScale = 1 + sp * 0.1;
+      fg.style.transform = `translate3d(0, ${(-sp * 56).toFixed(1)}px, 0) scale(${fgScale.toFixed(3)})`;
+      copy.style.setProperty("--cpy", `${(-sp * 120).toFixed(1)}px`);           // copy drifts up...
+      copy.style.opacity = String(clamp(1 - sp * 1.25, 0, 1));                  // ...and fades
       if (cue) cue.style.opacity = String(clamp(1 - sp * 2.2, 0, 1));
       ticking = false;
     };
