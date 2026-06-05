@@ -56,7 +56,7 @@ const trays = [
 
   /* rotating trays */
   .trays{position:absolute;inset:0;z-index:2}
-  .tray-slide{position:absolute;inset:0;will-change:transform;transform:translateX(110%)}
+  .tray-slide{position:absolute;inset:0;will-change:transform;transform:translateX(112%)}
   .tray-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 64%}
   .tray-name{
     position:absolute;left:58%;top:21%;transform:translateX(-50%);text-align:center;white-space:nowrap;
@@ -96,25 +96,44 @@ const trays = [
   const slides = [...document.querySelectorAll<HTMLElement>("#trays .tray-slide")];
   if (slides.length) {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const EASE = "transform .9s cubic-bezier(.6,0,.2,1)";
+    const DUR = 700;                                       // slide duration (ms)
+    const EASE = `transform ${DUR}ms cubic-bezier(.5,0,.2,1)`;
+    const DWELL = 4800;                                    // time between swaps (ms)
+    const OFF = "translateX(112%)";                        // parked off the RIGHT
     let cur = 0;
-    slides.forEach((s, i) => { s.style.transform = i === 0 ? "translateX(0)" : "translateX(110%)"; });
 
-    function show(next: number) {
-      const out = slides[cur], inc = slides[next];
-      inc.style.transition = "none";
-      inc.style.transform = "translateX(110%)";
-      void inc.offsetWidth;                 // reflow so the reset isn't animated
-      inc.style.transition = EASE; inc.style.transform = "translateX(0)";
-      out.style.transition = EASE; out.style.transform = "translateX(-110%)";
-      cur = next;
+    // start with every tray off to the RIGHT
+    slides.forEach((s) => { s.style.transform = OFF; });
+
+    // a tray ALWAYS enters and exits on the right: in = 112% -> 0 (right to left),
+    // out = 0 -> 112% (left to right). The next tray only starts once this one is gone.
+    function cycle() {
+      const out = slides[cur];
+      const next = (cur + 1) % slides.length;
+      out.style.transition = EASE;
+      out.style.transform = OFF;                           // 1) exit current to the right
+      window.setTimeout(() => {                            // 2) after it's fully out, bring in next
+        const inc = slides[next];
+        inc.style.transition = "none";
+        inc.style.transform = OFF;
+        void inc.offsetWidth;                              // reflow so the reset isn't animated
+        inc.style.transition = EASE;
+        inc.style.transform = "translateX(0)";
+        cur = next;
+      }, DUR + 80);
     }
 
-    if (!reduce) {
-      let timer = window.setInterval(() => show((cur + 1) % slides.length), 4200);
+    if (reduce) {
+      slides[0].style.transform = "translateX(0)";         // static, no motion
+    } else {
+      requestAnimationFrame(() => {                        // slide the first tray in on load
+        slides[0].style.transition = EASE;
+        slides[0].style.transform = "translateX(0)";
+      });
+      let timer = window.setInterval(cycle, DWELL);
       document.addEventListener("visibilitychange", () => {
-        clearInterval(timer);
-        if (!document.hidden) timer = window.setInterval(() => show((cur + 1) % slides.length), 4200);
+        window.clearInterval(timer);
+        if (!document.hidden) timer = window.setInterval(cycle, DWELL);
       });
     }
   }
