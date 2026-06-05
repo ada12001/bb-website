@@ -160,12 +160,16 @@ const trays = [
     let sp = 0, ticking = false;
 
     const apply = () => {
+      const vh = window.innerHeight;
       // back wall recedes (slowest)
       far.style.transform = `translate3d(0, ${(sp * 20).toFixed(1)}px, 0)`;
-      // foreground lifts AND scales up a touch — the scale keeps the counter covering
-      // the bottom edge so no dark gap is revealed (reads as the food rising toward you).
-      const fgScale = 1 + sp * 0.1;
-      fg.style.transform = `translate3d(0, ${(-sp * 56).toFixed(1)}px, 0) scale(${fgScale.toFixed(3)})`;
+      // Foreground lifts AND scales up. Center-origin scale extends the bottom edge
+      // down by 0.5*(scale-1)*vh; keep the lift smaller than that at EVERY viewport
+      // height so the counter always covers the bottom (the earlier fixed-px lift
+      // outran the coverage on short windows -> the gap came back in Chrome).
+      const fgScale = 1 + sp * 0.12;          // bottom gains ~0.06*vh of coverage
+      const lift = sp * vh * 0.04;            // ...always less than that coverage
+      fg.style.transform = `translate3d(0, ${(-lift).toFixed(1)}px, 0) scale(${fgScale.toFixed(3)})`;
       copy.style.setProperty("--cpy", `${(-sp * 120).toFixed(1)}px`);           // copy drifts up...
       copy.style.opacity = String(clamp(1 - sp * 1.25, 0, 1));                  // ...and fades
       if (cue) cue.style.opacity = String(clamp(1 - sp * 2.2, 0, 1));
