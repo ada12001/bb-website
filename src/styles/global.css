@@ -31,6 +31,13 @@ button{font-family:inherit}
 }
 .btn:hover{transform:translateY(-2px)}
 .btn--navy{background:var(--navy);box-shadow:0 8px 20px rgba(30,35,73,.4)}
+.btn-ghost{
+  display:inline-block;background:transparent;color:#fff;
+  font-weight:700;text-transform:uppercase;letter-spacing:.1em;
+  font-size:var(--step--1);padding:13px 30px;border:2px solid rgba(255,255,255,.7);
+  border-radius:var(--radius-pill);cursor:pointer;transition:all var(--dur-fast) var(--ease-out);
+}
+.btn-ghost:hover{background:#fff;color:var(--navy);transform:translateY(-2px)}
 
 /* ---------- Top nav (global; theme-flips over dark panels) ---------- */
 .nav{

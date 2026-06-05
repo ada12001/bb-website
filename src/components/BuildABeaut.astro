@@ -3,15 +3,7 @@
 // transitions into a horizontal menu rail (Cheesy Beaut, Hot Thigh) with a
 // feathered floral wipe between items. Self-contained (markup + style + script).
 ---
-<!-- INTRO -->
-<section class="intro">
-  <div class="eyebrow">Since 1906 · respect the pickles</div>
-  <h1>BUILD<br />THE <span class="pop">BEAUT</span></h1>
-  <p>Five generations of no-nonsense fried chicken. Scroll on down and stack it yourself — bun, bird, pickles, Duke's, and all.</p>
-  <div class="scrollcue"><span>Scroll to build</span><span class="arrow"></span></div>
-</section>
-
-<!-- BUILD + MENU RAIL -->
+<!-- BUILD + MENU RAIL (entered from the hero above) -->
 <section class="build" id="build">
   <div class="stage" id="stage">
     <div class="curtain" id="curtain"></div>
@@ -265,8 +257,14 @@
       panelRGB = [0, 1, 2].map((j) => Math.round(lerp(PANELS[seg][j], PANELS[seg + 1][j], t)));
       stage.style.backgroundColor = `rgb(${panelRGB[0]},${panelRGB[1]},${panelRGB[2]})`;
     }
+    // nav theme: light over the dark hero, dynamic over the build, dark elsewhere
     const lum = (0.299 * panelRGB[0] + 0.587 * panelRGB[1] + 0.114 * panelRGB[2]) / 255;
-    const navLight = lum < 0.56;
+    const NAVH = 70;
+    const hero = document.getElementById("hero");
+    const r = build.getBoundingClientRect();
+    const overHero = !!hero && window.scrollY < hero.offsetHeight - NAVH;
+    const buildUnderNav = r.top <= NAVH && r.bottom > NAVH;
+    const navLight = overHero ? true : buildUnderNav ? lum < 0.56 : false;
     document.body.classList.toggle("nav-light", navLight);
     if (logoImg) {
       const wantLogo = navLight ? "/img/logo-white.png" : "/img/logo-coral.png";
