@@ -13,13 +13,21 @@ const locations = await getCollection("locations");
     <h2 class="om-title" id="omTitle">Order Up</h2>
     <p class="om-sub">Pick your shack, then choose how you'd like to order.</p>
 
-    <label class="om-field" for="omLocation">Location</label>
-    <select class="om-select" id="omLocation">
-      <option value="" disabled selected>Choose your shack…</option>
-      {locations.map((l) => (
-        <option value={l.data.orderUrl}>{l.data.name} — {l.data.city}</option>
-      ))}
-    </select>
+    <span class="om-field" id="omFieldLabel">Location</span>
+    <div class="om-dd" id="omDD">
+      <button type="button" class="om-dd-trigger" id="omTrigger" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="omFieldLabel omLabel">
+        <span class="om-dd-label" id="omLabel">Choose your shack…</span>
+        <span class="om-dd-chev" aria-hidden="true"></span>
+      </button>
+      <ul class="om-dd-list" id="omList" role="listbox" aria-label="Pick a location" hidden>
+        {locations.map((l) => (
+          <li class="om-dd-opt" role="option" aria-selected="false" data-url={l.data.orderUrl} data-name={l.data.name}>
+            <span class="opt-name">{l.data.name}</span>
+            <span class="opt-city">{l.data.city}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
 
     <div class="om-actions">
       <button class="om-btn om-online" id="omOnline" disabled>
@@ -60,13 +68,44 @@ const locations = await getCollection("locations");
   .om-sub{color:var(--ink-soft);font-size:14px;font-weight:500;margin:8px 0 22px}
 
   .om-field{display:block;text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.12em;font-size:11px;color:var(--coral);margin-bottom:7px}
-  .om-select{
-    width:100%;font-family:inherit;font-size:16px;font-weight:500;color:var(--navy);
-    padding:13px 14px;border:2px solid #e2d8c8;border-radius:12px;background:#fff;cursor:pointer;
-    appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--navy) 50%),linear-gradient(135deg,var(--navy) 50%,transparent 50%);
-    background-position:calc(100% - 20px) center,calc(100% - 14px) center;background-size:6px 6px,6px 6px;background-repeat:no-repeat;
+
+  /* ---- branded custom dropdown ---- */
+  .om-dd{position:relative;text-align:left}
+  .om-dd-trigger{
+    width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;
+    font-family:var(--font-body);font-size:16px;font-weight:600;color:var(--navy);
+    padding:14px 16px;border:2px solid #e2d8c8;border-radius:12px;background:#fff;
+    transition:border-color var(--dur-fast) var(--ease-out),box-shadow var(--dur-fast) var(--ease-out);
   }
-  .om-select:focus{outline:none;border-color:var(--coral)}
+  .om-dd-trigger:hover{border-color:#d9b5ac}
+  .om-dd-trigger[aria-expanded="true"]{border-color:var(--coral);box-shadow:0 0 0 3px rgba(240,83,72,.15)}
+  .om-dd-label{color:#9a9183}                 /* placeholder tone */
+  .om-dd-label.chosen{color:var(--navy)}
+  .om-dd-chev{
+    width:9px;height:9px;border-right:2.5px solid var(--coral);border-bottom:2.5px solid var(--coral);
+    transform:rotate(45deg) translateY(-2px);flex:0 0 auto;transition:transform var(--dur-fast) var(--ease-out)
+  }
+  .om-dd-trigger[aria-expanded="true"] .om-dd-chev{transform:rotate(225deg) translateY(-2px)}
+
+  .om-dd-list{
+    position:absolute;top:calc(100% + 8px);left:0;right:0;z-index:5;list-style:none;
+    background:#fff;border:2px solid var(--coral);border-radius:14px;overflow:hidden;
+    box-shadow:0 18px 40px rgba(20,16,11,.22);max-height:280px;overflow-y:auto;
+    animation:omDrop .16s var(--ease-out);
+  }
+  .om-dd-list[hidden]{display:none}
+  @keyframes omDrop{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+  .om-dd-opt{
+    display:flex;flex-direction:column;gap:1px;padding:11px 16px;cursor:pointer;
+    border-bottom:1px solid #f1e9dc;transition:background var(--dur-fast) ease;
+  }
+  .om-dd-opt:last-child{border-bottom:none}
+  .om-dd-opt .opt-name{font-weight:700;color:var(--navy);font-size:15px}
+  .om-dd-opt .opt-city{font-size:12px;color:var(--ink-soft)}
+  .om-dd-opt:hover,.om-dd-opt.active{background:var(--peach)}
+  .om-dd-opt[aria-selected="true"]{background:var(--coral)}
+  .om-dd-opt[aria-selected="true"] .opt-name,
+  .om-dd-opt[aria-selected="true"] .opt-city{color:#fff}
 
   .om-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
   .om-btn{
@@ -91,45 +130,94 @@ const locations = await getCollection("locations");
 <script>
   const overlay = document.getElementById("orderModal");
   if (overlay) {
-    const sel = document.getElementById("omLocation") as HTMLSelectElement;
     const online = document.getElementById("omOnline") as HTMLButtonElement;
     const app = document.getElementById("omApp") as HTMLButtonElement;
     const stores = document.getElementById("omStores") as HTMLElement;
+    const trigger = document.getElementById("omTrigger") as HTMLButtonElement;
+    const label = document.getElementById("omLabel") as HTMLElement;
+    const list = document.getElementById("omList") as HTMLElement;
+    const opts = [...list.querySelectorAll<HTMLElement>(".om-dd-opt")];
     let lastTrigger: HTMLElement | null = null;
+    let selectedUrl = "";
+    let active = -1;
 
-    const open = (trigger?: HTMLElement) => {
-      lastTrigger = trigger || null;
+    // ---- branded dropdown ----
+    const setActive = (i: number) => {
+      active = i;
+      opts.forEach((o, k) => o.classList.toggle("active", k === i));
+      if (i >= 0) opts[i].scrollIntoView({ block: "nearest" });
+    };
+    const openList = () => {
+      list.hidden = false;
+      trigger.setAttribute("aria-expanded", "true");
+      setActive(opts.findIndex((o) => o.getAttribute("aria-selected") === "true"));
+    };
+    const closeList = () => {
+      list.hidden = true;
+      trigger.setAttribute("aria-expanded", "false");
+      active = -1;
+    };
+    const choose = (opt: HTMLElement) => {
+      selectedUrl = opt.dataset.url || "";
+      label.textContent = opt.dataset.name || "";
+      label.classList.add("chosen");
+      opts.forEach((o) => o.setAttribute("aria-selected", o === opt ? "true" : "false"));
+      online.disabled = !selectedUrl;
+      closeList();
+      trigger.focus();
+    };
+
+    trigger.addEventListener("click", (e) => { e.stopPropagation(); list.hidden ? openList() : closeList(); });
+    opts.forEach((opt, i) => {
+      opt.addEventListener("click", () => choose(opt));
+      opt.addEventListener("mousemove", () => setActive(i));
+    });
+
+    // ---- modal open/close ----
+    const open = (t?: HTMLElement) => {
+      lastTrigger = t || null;
       overlay.hidden = false;
       document.body.classList.add("om-open");
-      (sel || overlay).focus?.();
+      trigger.focus();
     };
     const close = () => {
       overlay.hidden = true;
       document.body.classList.remove("om-open");
+      closeList();
       stores.hidden = true;
       lastTrigger?.focus?.();
     };
 
-    // open from any [data-order] trigger (links keep /order as a no-JS fallback)
-    document.querySelectorAll<HTMLElement>("[data-order]").forEach((el) => {
-      el.addEventListener("click", (e) => { e.preventDefault(); open(el); });
-    });
-    overlay.querySelectorAll("[data-om-close]").forEach((el) =>
-      el.addEventListener("click", close)
+    document.querySelectorAll<HTMLElement>("[data-order]").forEach((el) =>
+      el.addEventListener("click", (e) => { e.preventDefault(); open(el); })
     );
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !overlay.hidden) close(); });
-
-    // location selector enables the Online button
-    sel?.addEventListener("change", () => { online.disabled = !sel.value; });
-    online?.addEventListener("click", () => {
-      if (sel.value) window.open(sel.value, "_blank", "noopener");
+    overlay.querySelectorAll("[data-om-close]").forEach((el) => el.addEventListener("click", close));
+    // click anywhere inside the modal but outside the dropdown closes the list
+    overlay.addEventListener("click", (e) => {
+      if (!(e.target as HTMLElement).closest(".om-dd")) closeList();
     });
 
-    // app button: route to the right store by OS; on desktop reveal both
-    app?.addEventListener("click", () => {
+    // ---- keyboard ----
+    trigger.addEventListener("keydown", (e) => {
+      if (list.hidden && ["ArrowDown", "ArrowUp", "Enter", " "].includes(e.key)) { e.preventDefault(); openList(); }
+    });
+    document.addEventListener("keydown", (e) => {
+      if (overlay.hidden) return;
+      if (!list.hidden) {
+        if (e.key === "ArrowDown") { e.preventDefault(); setActive(Math.min(active + 1, opts.length - 1)); }
+        else if (e.key === "ArrowUp") { e.preventDefault(); setActive(Math.max(active - 1, 0)); }
+        else if (e.key === "Enter") { e.preventDefault(); if (active >= 0) choose(opts[active]); }
+        else if (e.key === "Escape") { e.preventDefault(); closeList(); trigger.focus(); }
+      } else if (e.key === "Escape") {
+        close();
+      }
+    });
+
+    // ---- actions ----
+    online.addEventListener("click", () => { if (selectedUrl) window.open(selectedUrl, "_blank", "noopener"); });
+    app.addEventListener("click", () => {
       const ua = navigator.userAgent || "";
-      const isIOS = /iPad|iPhone|iPod/.test(ua) ||
-        (navigator.platform === "MacIntel" && (navigator as any).maxTouchPoints > 1);
+      const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && (navigator as any).maxTouchPoints > 1);
       const isAndroid = /Android/.test(ua);
       if (isIOS) window.open(app.dataset.ios, "_blank", "noopener");
       else if (isAndroid) window.open(app.dataset.android, "_blank", "noopener");
