@@ -1,11 +1,12 @@
 ---
+// `hl` = the destination page's signature colour; the hover "sticker" uses it.
 const links = [
-  { href: "/menu", label: "Menu" },
-  { href: "/catering", label: "Catering" },
-  { href: "/rewards", label: "Rewards" },
-  { href: "/story", label: "Our Story" },
-  { href: "/locations", label: "Locations" },
-  { href: "/careers", label: "Careers" },
+  { href: "/menu", label: "Menu", hl: "#f4d9c5" },        // peach
+  { href: "/catering", label: "Catering", hl: "#e5d72a" }, // yellow
+  { href: "/rewards", label: "Rewards", hl: "#e5d72a" },   // yellow
+  { href: "/story", label: "Our Story", hl: "#a0d8d1" },   // mint
+  { href: "/locations", label: "Locations", hl: "#b6b9db" }, // periwinkle
+  { href: "/careers", label: "Careers", hl: "#f39887" },   // salmon
 ];
 ---
 <nav class="nav">
@@ -15,7 +16,7 @@ const links = [
   </a>
   <div class="nav-right">
     <div class="nav-links" id="navMenu">
-      {links.map((l) => <a href={l.href}>{l.label}</a>)}
+      {links.map((l) => <a href={l.href} style={`--hl:${l.hl}`} data-hl={l.hl}>{l.label}</a>)}
     </div>
     <a href="/order" class="order-btn" data-order>Order Now</a>
     <button class="nav-toggle" id="navToggle" type="button" aria-label="Toggle menu" aria-expanded="false" aria-controls="navMenu">
@@ -29,6 +30,40 @@ const links = [
   // whichever one is under the navbar decides the nav colors. Default = dark.
   const nav = document.querySelector(".nav") as HTMLElement | null;
   if (nav) {
+    const navLinks = Array.from(document.querySelectorAll<HTMLElement>("#navMenu a"));
+
+    const parseRGB = (s: string): number[] | null => {
+      const m = s.match(/rgba?\(([^)]+)\)/);
+      if (!m) return null;
+      const p = m[1].split(",").map((x) => parseFloat(x));
+      if (p[3] !== undefined && p[3] < 0.1) return null; // transparent
+      return [p[0], p[1], p[2]];
+    };
+    const hexRGB = (h: string): number[] => {
+      const n = parseInt(h.slice(1), 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    };
+    const lum = (c: number[]) => (0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2]) / 255;
+    const dist = (a: number[], b: number[]) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
+
+    // the actual visible background colour directly under the navbar's centre
+    const sampleBg = (): number[] => {
+      const r = nav.getBoundingClientRect();
+      const prev = nav.style.pointerEvents;
+      nav.style.pointerEvents = "none";
+      let el = document.elementFromPoint(
+        Math.round(window.innerWidth / 2),
+        Math.round(r.top + r.height / 2),
+      ) as HTMLElement | null;
+      nav.style.pointerEvents = prev;
+      while (el && el !== document.documentElement) {
+        const c = parseRGB(getComputedStyle(el).backgroundColor);
+        if (c) return c;
+        el = el.parentElement;
+      }
+      return [250, 244, 234]; // cream
+    };
+
     const update = () => {
       const r = nav.getBoundingClientRect();
       const line = r.top + r.height / 2; // sample at the navbar's vertical middle
@@ -38,6 +73,18 @@ const links = [
         if (b.top <= line && b.bottom > line) { theme = s.getAttribute("data-nav-theme") || "dark"; break; }
       }
       document.body.classList.toggle("nav-light", theme === "light");
+
+      // Background-aware tweaks: keep hover stickers visible, and make the Order
+      // button coral when it sits over a dark (e.g. navy) background.
+      const bg = sampleBg();
+      const L = lum(bg);
+      document.body.classList.toggle("nav-bg-dark", L < 0.32);
+      const lightBg = L > 0.55; // only light backgrounds can swallow a pastel sticker
+      for (const a of navLinks) {
+        const hl = a.dataset.hl;
+        const blends = !!hl && lightBg && dist(hexRGB(hl), bg) < 78;
+        a.classList.toggle("hl-fallback", blends);
+      }
     };
     (window as any).__navUpdate = update; // let dynamic sections (the build) force a re-check
     let ticking = false;
