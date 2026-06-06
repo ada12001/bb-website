@@ -173,16 +173,16 @@
   const CURTAIN_MAX = reduce ? 0 : 0.28;   // hide the floral wash for reduced motion
 
   function railToPos(r: number) {
-    if (r < 0.12) return 0;
-    if (r < 0.44) return easeIO((r - 0.12) / 0.32);
-    if (r < 0.56) return 1;
-    if (r < 0.88) return 1 + easeIO((r - 0.56) / 0.32);
-    return 2;
+    if (r < 0.20) return 0;                              // Beaut dwell (extended — its copy needs time to read)
+    if (r < 0.48) return easeIO((r - 0.20) / 0.28);     // Beaut -> Cheesy
+    if (r < 0.58) return 1;                              // Cheesy dwell
+    if (r < 0.86) return 1 + easeIO((r - 0.58) / 0.28); // Cheesy -> Hot Thigh
+    return 2;                                            // Hot Thigh
   }
 
   const CURTAINS: [number, number, string][] = [
-    [0.12, 0.44, "/img/floral-peach.png"],
-    [0.56, 0.88, "/img/floral-mint.png"],
+    [0.20, 0.48, "/img/floral-peach.png"],
+    [0.58, 0.86, "/img/floral-mint.png"],
   ];
 
   function render(P: number) {
@@ -246,7 +246,7 @@
     // there's always exactly one readable thing in the left column.
     const hand = inv(P, 0.46, 0.57);
     const recipeFade = inv(hand, 0, 0.42);   // checklist fully gone by hand .42
-    const copyShow = inv(hand, 0.55, 1);     // copy starts only after the beat
+    const copyShow = inv(hand, 0.5, 0.82);   // copy in after the beat, fully up well before it slides
     const recipeLift = lerp(0, -12, easeOutCubic(recipeFade));
     const copyRise = lerp(14, 0, easeOutCubic(copyShow));
     recipeEl.style.transform = `translate(${ox0}px,calc(-50% + ${recipeLift}px))`;

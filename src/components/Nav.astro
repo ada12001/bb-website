@@ -3,7 +3,7 @@
 const links = [
   { href: "/menu", label: "Menu", hl: "#f4d9c5" },        // peach
   { href: "/catering", label: "Catering", hl: "#e5d72a" }, // yellow
-  { href: "/rewards", label: "Rewards", hl: "#e5d72a" },   // yellow
+  { href: "/rewards", label: "Rewards", hl: "#f05348" },   // coral
   { href: "/story", label: "Our Story", hl: "#a0d8d1" },   // mint
   { href: "/locations", label: "Locations", hl: "#b6b9db" }, // periwinkle
   { href: "/careers", label: "Careers", hl: "#f39887" },   // salmon
@@ -77,12 +77,12 @@ const links = [
       // Background-aware tweaks: keep hover stickers visible, and make the Order
       // button coral when it sits over a dark (e.g. navy) background.
       const bg = sampleBg();
-      const L = lum(bg);
-      document.body.classList.toggle("nav-bg-dark", L < 0.32);
-      const lightBg = L > 0.55; // only light backgrounds can swallow a pastel sticker
+      document.body.classList.toggle("nav-bg-dark", lum(bg) < 0.32);
+      // If a sticker's colour is too close to the current background (e.g. Rewards'
+      // coral over the coral header), fall back to a navy sticker so it stays visible.
       for (const a of navLinks) {
         const hl = a.dataset.hl;
-        const blends = !!hl && lightBg && dist(hexRGB(hl), bg) < 78;
+        const blends = !!hl && dist(hexRGB(hl), bg) < 80;
         a.classList.toggle("hl-fallback", blends);
       }
     };
