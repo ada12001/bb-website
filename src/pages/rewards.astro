@@ -1,6 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
-import { APP_IOS, APP_ANDROID, REWARDS_URL } from "../consts";
+import { APP_IOS, APP_ANDROID, REWARDS_URL, REWARDS_LOOKUP_URL } from "../consts";
 
 const earn = [
   { item: "Sides", points: 60 },
@@ -35,6 +35,7 @@ const perks = [
       <a href={APP_IOS} target="_blank" rel="noopener">App Store</a>
       <a href={APP_ANDROID} target="_blank" rel="noopener">Google Play</a>
     </div>
+    <p class="rw-lookup">Already a Buddy? <a href={REWARDS_LOOKUP_URL} target="_blank" rel="noopener">Look up your points &rarr;</a></p>
   </section>
 
   <section class="rw-how" data-nav-theme="light">
@@ -84,6 +85,9 @@ const perks = [
   .rw-stores[hidden]{display:none}
   .rw-stores a{font-weight:700;color:#fff;text-decoration:underline;text-underline-offset:3px}
   .rw-stores a:hover{color:var(--mint)}
+  .rw-lookup{margin-top:20px;color:#aab0d0;font-size:14px}
+  .rw-lookup a{color:#fff;font-weight:700;text-decoration:underline;text-underline-offset:3px}
+  .rw-lookup a:hover{color:var(--mint)}
 
   .rw-how{background:var(--navy);color:var(--cream);text-align:center;padding:8px 24px 72px}
   .rw-script{font-family:var(--font-script);color:var(--mint);font-size:clamp(28px,5vw,44px);margin-bottom:24px}
