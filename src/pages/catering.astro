@@ -66,9 +66,36 @@ const menu: { title: string; note?: string; items: MItem[] }[] = [
     <p class="intro">Our recently expanded catering menu offers high-quality, all-natural chicken in sandwiches, bites, and wings, plus healthy and hearty salads, a variety of sides, and desserts by Copain Bakery. Show your office who's boss, upgrade your birthday party spread with chicken that's kid- and parent-approved, or be the envy of the tailgate lot.</p>
 
     <div class="cta-row">
-      <a class="btn" href="#menu">View the Catering Menu</a>
       <a class="btn-ghost-navy" href={`mailto:${CATERING_EMAIL}`}>Contact the Catering Team</a>
     </div>
+
+    <h3 class="sec">How it works</h3>
+    <ol class="steps">
+      {steps.map((s) => (
+        <li>
+          <span class="num">{s.n}</span>
+          <div>
+            <strong>{s.h}</strong>
+            <p>{s.p}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+
+    <h3 class="sec">Order catering</h3>
+    <p class="avail">Available for pickup or delivery from these shacks:</p>
+    <ul class="cater-locs">
+      {cateringLocations.map((l) => (
+        <li>
+          <div>
+            <h4>{l.name}</h4>
+            <p>{l.city}</p>
+          </div>
+          <a class="btn" href={l.url} target="_blank" rel="noopener">Order Catering</a>
+        </li>
+      ))}
+    </ul>
+    <p class="foot">Bigger event or a custom spread? Email <a href={`mailto:${CATERING_EMAIL}`}>{CATERING_EMAIL}</a>.</p>
 
     <section class="menu-wrap" id="menu">
       <div class="menu-top">
@@ -98,34 +125,6 @@ const menu: { title: string; note?: string; items: MItem[] }[] = [
       <div class="sauce-callout">8 oz &amp; 16 oz sauces available — <span>$5.99 / $11.99</span></div>
       <p class="menu-foot">Paper products available upon request. Delivery service and admin charges may apply.</p>
     </section>
-
-    <h3 class="sec">How it works</h3>
-    <ol class="steps">
-      {steps.map((s) => (
-        <li>
-          <span class="num">{s.n}</span>
-          <div>
-            <strong>{s.h}</strong>
-            <p>{s.p}</p>
-          </div>
-        </li>
-      ))}
-    </ol>
-
-    <h3 class="sec">Order catering</h3>
-    <p class="avail">Available for pickup or delivery from these shacks:</p>
-    <ul class="cater-locs">
-      {cateringLocations.map((l) => (
-        <li>
-          <div>
-            <h4>{l.name}</h4>
-            <p>{l.city}</p>
-          </div>
-          <a class="btn" href={l.url} target="_blank" rel="noopener">Order Catering</a>
-        </li>
-      ))}
-    </ul>
-    <p class="foot">Bigger event or a custom spread? Email <a href={`mailto:${CATERING_EMAIL}`}>{CATERING_EMAIL}</a>.</p>
   </div>
 </Base>
 
