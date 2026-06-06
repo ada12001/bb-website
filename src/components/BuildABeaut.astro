@@ -240,15 +240,21 @@
     const ox0 = railOn ? off(0) : 0;
     sandwichEl.style.transform = `translateX(${ox0 + restShift}px) scale(${(lerp(1, 1.03, easeOutCubic(done)) * (railOn ? scl(0) : 1)).toFixed(3)})`;
     sandwichEl.style.opacity = String(railOn ? fadeImg(0) : 1);
-    // As the Beaut finishes building, the "Building the Beaut" checklist crossfades
-    // into the Beaut copy card (same left-side format as Cheesy Beaut / Hot Thigh);
-    // the card then behaves as slide-0 copy and slides out left into the rail.
-    const copyIn = inv(aP, 0.82, 0.99); // 0 while building -> 1 once assembled
-    recipeEl.style.transform = `translate(${ox0}px,-50%)`;
-    recipeEl.style.opacity = String(railOn ? 0 : 1 - copyIn);
-    beautCopy.style.transform = `translate(${ox0}px,-50%)`;
-    beautCopy.style.opacity = String(railOn ? fadeCopy(0) : copyIn);
-    prailBox.style.opacity = String(railOn ? 0 : 1 - copyIn);
+    // Sequential handoff from the "Building the Beaut" checklist to the Beaut copy
+    // card. It straddles the assembly->rail boundary (P=0.50), during which the Beaut
+    // stays parked dead-center (pos=0 until P~0.56). The checklist fades + lifts away
+    // FIRST; after a clean beat the copy card rises in — so the two never overlap and
+    // there's always exactly one readable thing in the left column.
+    const hand = inv(P, 0.46, 0.57);
+    const recipeFade = inv(hand, 0, 0.42);   // checklist fully gone by hand .42
+    const copyShow = inv(hand, 0.55, 1);     // copy starts only after the beat
+    const recipeLift = lerp(0, -12, easeOutCubic(recipeFade));
+    const copyRise = lerp(14, 0, easeOutCubic(copyShow));
+    recipeEl.style.transform = `translate(${ox0}px,calc(-50% + ${recipeLift}px))`;
+    recipeEl.style.opacity = String(1 - recipeFade);
+    beautCopy.style.transform = `translate(${ox0}px,calc(-50% + ${copyRise}px))`;
+    beautCopy.style.opacity = String(Math.min(copyShow, railOn ? fadeCopy(0) : 1));
+    prailBox.style.opacity = String(1 - recipeFade);
     bgword.style.transform = `translate(calc(-50% + ${ox0 * PARALLAX + restShift}px),-50%)`;
     bgword.style.opacity = String((railOn ? fadeName(0) : 1) * 0.24);
 
