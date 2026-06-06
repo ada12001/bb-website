@@ -208,7 +208,7 @@
     const restShift = copyVisible ? Math.max(0, (copyRight + gap + (vw - rightPad)) / 2 - vw / 2) : 0;
     const scrimW = copyRight + 70;
     scrim.style.width = scrimW + "px";
-    scrim.style.opacity = copyVisible ? "1" : "0";
+    scrim.style.opacity = copyVisible ? "0.5" : "0";
 
     // assembly (pure vertical stacking)
     bottomBun.style.opacity = String(inv(aP, 0.0, 0.1));
