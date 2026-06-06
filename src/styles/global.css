@@ -80,7 +80,7 @@ body.nav-light .nav .order-btn{background:var(--navy);box-shadow:0 6px 18px rgba
 /* ---------- Footer ---------- */
 .site-footer{background:var(--navy);color:#9aa0c4;padding:56px 24px 40px}
 .site-footer .inner{max-width:var(--maxw);margin:0 auto;display:flex;flex-wrap:wrap;gap:32px;justify-content:space-between;align-items:flex-start}
-.site-footer img{height:42px;opacity:.95}
+.site-footer img{height:105px;opacity:.95}
 .site-footer nav{display:flex;gap:40px;flex-wrap:wrap}
 .site-footer h5{color:var(--cream);text-transform:uppercase;letter-spacing:.12em;font-size:11px;margin-bottom:12px}
 .site-footer a{display:block;font-size:13px;margin:7px 0;color:#c7cbe6}
