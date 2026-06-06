@@ -17,6 +17,46 @@ const steps = [
   { n: "2", h: "Set the time + date", p: "Tell us when you need it — we'll have it ready." },
   { n: "3", h: "Choose delivery or pick up", p: "We'll bring it to you, or have it waiting at the shack." },
 ];
+
+// Full catering menu (scraped from /catering-menu.pdf)
+type MItem = { name: string; desc?: string; price?: string; serves?: string; star?: boolean; sizes?: { label: string; price: string }[] };
+const menu: { title: string; note?: string; items: MItem[] }[] = [
+  {
+    title: "Catering",
+    items: [
+      { name: "Box of Beauts", price: "106.99", desc: "12 of our signature sandwiches with housemade pickles and Duke's Mayo. Served with choice of 8oz sauce." },
+      { name: "Box of Bites", desc: "All-natural chicken breast meat, hand cut and hand breaded, tossed in seasoned buttermilk and flour. Served with choice of 8oz sauce.", sizes: [{ label: "Small (40 / serves 6–8)", price: "49.99" }, { label: "Large (60 / serves 10–12)", price: "75.99" }] },
+      { name: "Box of Wings", desc: "All-natural chicken wings, hand breaded, seasoned, and fried to perfection. Served with choice of 8oz sauce.", sizes: [{ label: "Small (20 / serves 3–5)", price: "38.99" }, { label: "Large (40 / serves 6–8)", price: "78.99" }] },
+      { name: "Box of Tenders", desc: "All-natural juicy chicken tenders, hand breaded, seasoned and perfectly crispy. Served with choice of 8oz sauce.", sizes: [{ label: "Small (12 / serves 4–6)", price: "40.99" }, { label: "Large (24 / serves 10–12)", price: "79.99" }] },
+      { name: "Box of Wraps", price: "69.99", desc: "16 roasted chicken salad wrap halves, wrapped in locally made flour tortilla with baby spinach and pickled red onions. Served with choice of 8oz sauce." },
+    ],
+  },
+  {
+    title: "Sides & Salads",
+    items: [
+      { name: "Potato Salad", desc: "Yukon potatoes tossed with Duke's Mayo dressing with mustard and chives.", sizes: [{ label: "Small (serves 6–8)", price: "19.99" }, { label: "Large (serves 18–20)", price: "49.99" }] },
+      { name: "Iredell Slaw", desc: "Shredded cabbage tossed in a light and refreshing dressing.", sizes: [{ label: "Small (serves 6–8)", price: "15.99" }, { label: "Large (serves 18–20)", price: "39.99" }] },
+      { name: "Cucumber Salad", desc: "Sliced cucumbers and onions tossed in a refreshing yogurt dressing with dill and mint.", sizes: [{ label: "Small (serves 6–8)", price: "19.99" }, { label: "Large (serves 18–20)", price: "49.99" }] },
+      { name: "Simple Salad", price: "29.99", serves: "Serves 6–8", desc: "Mixed greens with rainbow carrots, cucumber, red onion, and shredded cheddar, tossed in a light refreshing dressing." },
+      { name: "Quinoa Salad", price: "39.99", serves: "Serves 6–8", desc: "Baby spinach, quinoa and seasonal toppings, tossed in a lemon and white balsamic vinaigrette." },
+    ],
+  },
+  {
+    title: "Desserts",
+    note: "*Require 48 hours notice.",
+    items: [
+      { name: "Copain Handmade Cookies", star: true, desc: "Seasonal flavor.", sizes: [{ label: "1 dozen", price: "35.99" }, { label: "2 dozen", price: "71.99" }] },
+      { name: "Copain Hand Pies", star: true, desc: "Seasonal flavor.", sizes: [{ label: "1 dozen", price: "35.99" }, { label: "2 dozen", price: "71.99" }] },
+    ],
+  },
+  {
+    title: "Drinks",
+    items: [
+      { name: "½ Gallon Tea", price: "5.99", desc: "Sweet or unsweet." },
+      { name: "½ Gallon Freshly Squeezed Lemonade", price: "7.99" },
+    ],
+  },
+];
 ---
 <Base title="Catering — Bossy Beulah's" description="All-natural chicken for all occasions. Bossy Beulah's catering for offices, parties, and tailgates.">
   <PageHeader kicker="feed the whole crew" title="CATERING" bg="var(--yellow)" />
@@ -26,9 +66,38 @@ const steps = [
     <p class="intro">Our recently expanded catering menu offers high-quality, all-natural chicken in sandwiches, bites, and wings, plus healthy and hearty salads, a variety of sides, and desserts by Copain Bakery. Show your office who's boss, upgrade your birthday party spread with chicken that's kid- and parent-approved, or be the envy of the tailgate lot.</p>
 
     <div class="cta-row">
-      <a class="btn" href={MENU_PDF} target="_blank" rel="noopener">View the Catering Menu</a>
+      <a class="btn" href="#menu">View the Catering Menu</a>
       <a class="btn-ghost-navy" href={`mailto:${CATERING_EMAIL}`}>Contact the Catering Team</a>
     </div>
+
+    <section class="menu-wrap" id="menu">
+      <div class="menu-top">
+        <h3 class="sec">The Catering Menu</h3>
+        <a class="pdf-link" href={MENU_PDF} target="_blank" rel="noopener">Download PDF ↓</a>
+      </div>
+      {menu.map((cat) => (
+        <div class="mcat">
+          <h4 class="mcat-title">{cat.title}</h4>
+          {cat.items.map((it) => (
+            <div class="mitem">
+              <div class="mhead">
+                <p class="mname">{it.name}{it.star && <span class="star">*</span>}{it.serves && <span class="serves">{it.serves}</span>}</p>
+                {it.price && <span class="price">${it.price}</span>}
+              </div>
+              {it.desc && <p class="mdesc">{it.desc}</p>}
+              {it.sizes && (
+                <ul class="sizes">
+                  {it.sizes.map((s) => (<li><span>{s.label}</span><b>${s.price}</b></li>))}
+                </ul>
+              )}
+            </div>
+          ))}
+          {cat.note && <p class="mnote">{cat.note}</p>}
+        </div>
+      ))}
+      <div class="sauce-callout">8 oz &amp; 16 oz sauces available — <span>$5.99 / $11.99</span></div>
+      <p class="menu-foot">Paper products available upon request. Delivery service and admin charges may apply.</p>
+    </section>
 
     <h3 class="sec">How it works</h3>
     <ol class="steps">
@@ -69,6 +138,30 @@ const steps = [
   .btn-ghost-navy:hover{background:var(--navy);color:#fff;transform:translateY(-2px)}
 
   .sec{font-family:var(--font-display);color:var(--navy);font-size:clamp(24px,4vw,32px);margin:44px 0 18px}
+
+  /* ---- Catering menu ---- */
+  .menu-wrap{scroll-margin-top:120px}
+  .menu-top{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .menu-top .sec{margin-bottom:10px}
+  .pdf-link{color:var(--coral);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:12px;white-space:nowrap}
+  .pdf-link:hover{text-decoration:underline}
+  .mcat{margin-top:28px}
+  .mcat-title{font-family:var(--font-display);background:var(--coral);color:var(--cream);font-weight:400;font-size:clamp(20px,3.4vw,26px);padding:7px 16px;border-radius:8px;letter-spacing:.02em}
+  .mitem{padding:15px 4px;border-bottom:1px solid #efe7da}
+  .mhead{display:flex;align-items:baseline;justify-content:space-between;gap:14px}
+  .mname{font-family:var(--font-display);color:var(--navy);font-size:19px;line-height:1.1}
+  .mname .star{color:var(--coral)}
+  .mname .serves{font-family:var(--font-body);font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:11px;color:var(--ink-soft);margin-left:8px}
+  .mhead .price{font-weight:700;color:var(--navy);white-space:nowrap}
+  .mdesc{color:var(--ink-soft);font-size:14px;line-height:1.55;margin-top:4px;max-width:56ch}
+  .sizes{list-style:none;margin-top:9px;display:grid;gap:5px;max-width:330px}
+  .sizes li{display:flex;justify-content:space-between;gap:12px;font-size:14px;color:var(--navy)}
+  .sizes li span{color:var(--ink-soft)}
+  .sizes li b{font-weight:700}
+  .mnote{font-style:italic;color:var(--ink-soft);font-size:13px;margin-top:12px}
+  .sauce-callout{margin:26px 0 0;border:2px solid var(--coral);border-radius:12px;padding:14px 18px;text-align:center;color:var(--navy);font-weight:700;letter-spacing:.01em}
+  .sauce-callout span{color:var(--coral)}
+  .menu-foot{color:var(--ink-soft);font-size:13px;font-style:italic;margin-top:14px}
   .steps{list-style:none;display:grid;gap:16px}
   .steps li{display:flex;gap:16px;align-items:flex-start}
   .steps .num{flex:0 0 auto;width:38px;height:38px;border-radius:50%;background:var(--coral);color:#fff;font-family:var(--font-display);font-size:20px;display:flex;align-items:center;justify-content:center}
