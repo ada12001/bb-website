@@ -301,6 +301,26 @@
       railCopy[k].style.opacity = String(railOn ? (mobile ? fadeCopyM(i) : fadeCopy(i)) : 0);
     }
 
+    // Mobile: sit each copy card right below its food. The square food box leaves
+    // ~15% empty under the sandwich, so a bottom-anchored card floats too low — anchor
+    // the card's top just under the visible sandwich (≈85% down the box) instead.
+    {
+      const sandBoxH = sandwichEl.offsetHeight;
+      const imgBoxH = railImgs[0].offsetHeight || sandBoxH;
+      const place = (el: HTMLElement, boxH: number) => {
+        if (mobile) {
+          el.style.bottom = "auto";
+          el.style.top = `${Math.round(vh * 0.5 + foodY + boxH * 0.35 + 12)}px`;
+        } else {
+          el.style.top = "";
+          el.style.bottom = "";
+        }
+      };
+      place(beautCopy, sandBoxH);
+      place(railCopy[0], imgBoxH);
+      place(railCopy[1], imgBoxH);
+    }
+
     // floral wipe
     let curtainOn = false;
     if (railOn) {
