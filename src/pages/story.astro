@@ -5,6 +5,16 @@ import PageHeader from "../components/PageHeader.astro";
 <Base title="Our Story — Bossy Beulah's" description="Five generations of chicken-sandwich makers, in honor of our great Aunt Beaut. Born 1906.">
   <PageHeader kicker="you can get away with being bossy when you're right" title="OUR STORY" bg="var(--mint)" />
 
+  <figure class="story-photo">
+    <img
+      src="/img/aunt-beulah.jpg"
+      alt="Aunt Beulah, the matriarch behind Bossy Beulah's, standing outside in a white suit"
+      width="1800"
+      height="1223"
+    />
+    <figcaption>The one, the only — Aunt Beulah.</figcaption>
+  </figure>
+
   <article class="story">
     <p class="lead">Bossy Beulah's is the culmination of five solid generations of chicken sandwich makers.</p>
     <p>Our great Aunt Beaut, born in 1906, is the one who elevated our family's chicken sandwich craft to an art form. We fondly dubbed her Bossy, but as Aunt Beaut was famous for saying, <em>"You can get away with being bossy when you're right."</em> And Bossy Beaut was always right — especially when it came to making her world-famous fried chicken sammie.</p>
@@ -14,7 +24,10 @@ import PageHeader from "../components/PageHeader.astro";
 </Base>
 
 <style>
-  .story{max-width:680px;margin:0 auto;padding:56px 24px 96px}
+  .story-photo{max-width:920px;margin:48px auto 0;padding:0 24px}
+  .story-photo img{width:100%;height:auto;border-radius:16px;box-shadow:0 22px 50px rgba(30,35,73,.18);display:block}
+  .story-photo figcaption{margin-top:14px;text-align:center;font-family:var(--font-script);color:var(--coral);font-size:clamp(20px,3vw,28px)}
+  .story{max-width:680px;margin:0 auto;padding:40px 24px 96px}
   .story .lead{font-family:var(--font-display);color:var(--coral);font-size:clamp(24px,4vw,34px);line-height:1.1;margin-bottom:24px}
   .story p{font-size:18px;line-height:1.7;color:var(--ink);margin-bottom:20px}
   .story em{font-style:italic;color:var(--navy)}
