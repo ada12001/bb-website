@@ -21,7 +21,10 @@ const trays = [
     <div class="trays" id="trays">
       {trays.map((t, i) => (
         <div class="tray-slide" data-i={i}>
-          <img class="tray-img" src={t.img} alt={t.alt} />
+          <picture class="tray-pic">
+            <source media="(max-width:820px)" srcset={t.img.replace(".png", "-m.png")} />
+            <img class="tray-img" src={t.img} alt={t.alt} />
+          </picture>
           <div class="tray-name" style={`--nx:${t.nx};--ny:${t.ny}`}>
             <span class="tn-script">{t.name}</span>
             <span class="tn-tag">{t.tag}</span>
@@ -93,14 +96,22 @@ const trays = [
 
   @media(max-width:820px){
     .hp-far{inset:0}
-    .hp-far img{object-position:center 70%}
-    .hp-counter,.tray-img{object-position:center 70%}
-    .hero2-scrim{background:linear-gradient(to bottom, rgba(15,10,6,.55) 0%, rgba(15,10,6,.15) 30%, rgba(15,10,6,.1) 55%, rgba(15,10,6,.6) 100%)}
-    .hp-copy{left:0;right:0;top:14vh;max-width:none;text-align:center;padding:0 20px;transform:none}
+    .hp-far img{object-position:center 60%}
+    .hp-counter{object-position:center 92%}
+    .hero2-scrim{background:linear-gradient(to bottom, rgba(15,10,6,.62) 0%, rgba(15,10,6,.16) 24%, rgba(15,10,6,.08) 46%, rgba(15,10,6,.5) 100%)}
+    .hp-copy{left:0;right:0;top:10vh;max-width:none;text-align:center;padding:0 20px;transform:none}
+    .hero2-title{font-size:clamp(42px,12vw,64px)}
     .hp-copy .hero-kicker{justify-content:center}
     .hero-cta{justify-content:center}
-    .tray-name{left:50%;top:auto;bottom:16%}
-    .hero2-scroll{left:50%;transform:translateX(-50%);align-items:center}
+
+    /* show the WHOLE tray (cropped mobile asset via <picture>), centered beneath copy */
+    .tray-pic{display:contents}
+    .tray-slide{inset:auto 0 9% 0;height:27%;transform:translateX(112%)}
+    .tray-img{object-fit:contain;object-position:center bottom;height:100%}
+    .tray-name{left:50%;right:auto;top:auto;bottom:calc(100% + 10px);transform:translateX(-50%)}
+    .tn-script{font-size:clamp(30px,8vw,46px)}
+    .tn-tag{margin-top:7px}
+    .hero2-scroll{left:50%;transform:translateX(-50%);align-items:center;bottom:22px}
   }
 </style>
 
