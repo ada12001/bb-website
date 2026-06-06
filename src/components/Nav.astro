@@ -7,11 +7,40 @@ const links = [
 ];
 ---
 <nav class="nav">
-  <a href="/" aria-label="Bossy Beulah's home">
-    <img class="logo" src="/img/logo-coral.png" alt="Bossy Beulah's Chicken Shack" />
+  <a href="/" class="nav-logo" aria-label="Bossy Beulah's home">
+    <img class="logo logo--coral" src="/img/logo-coral.png" alt="Bossy Beulah's Chicken Shack" />
+    <img class="logo logo--white" src="/img/logo-white.png" alt="" aria-hidden="true" />
   </a>
   <div class="nav-links">
     {links.map((l) => <a href={l.href}>{l.label}</a>)}
     <a href="/order" class="order-btn" data-order>Order Now</a>
   </div>
 </nav>
+
+<script>
+  // Global nav-theme controller. Each section can declare data-nav-theme="light|dark";
+  // whichever one is under the navbar decides the nav colors. Default = dark.
+  const nav = document.querySelector(".nav") as HTMLElement | null;
+  if (nav) {
+    const update = () => {
+      const r = nav.getBoundingClientRect();
+      const line = r.top + r.height / 2; // sample at the navbar's vertical middle
+      let theme = "dark";
+      for (const s of document.querySelectorAll<HTMLElement>("[data-nav-theme]")) {
+        const b = s.getBoundingClientRect();
+        if (b.top <= line && b.bottom > line) { theme = s.getAttribute("data-nav-theme") || "dark"; break; }
+      }
+      document.body.classList.toggle("nav-light", theme === "light");
+    };
+    (window as any).__navUpdate = update; // let dynamic sections (the build) force a re-check
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) { ticking = true; requestAnimationFrame(() => { update(); ticking = false; }); }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", update);
+    update();
+    // re-check shortly after load in case fonts/images shift section heights
+    window.addEventListener("load", () => setTimeout(update, 50));
+  }
+</script>

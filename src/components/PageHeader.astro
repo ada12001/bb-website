@@ -1,8 +1,8 @@
 ---
-interface Props { kicker?: string; title: string; lead?: string; bg?: string; }
-const { kicker, title, lead, bg = "var(--cream)" } = Astro.props;
+interface Props { kicker?: string; title: string; lead?: string; bg?: string; navTheme?: "light" | "dark"; }
+const { kicker, title, lead, bg = "var(--cream)", navTheme = "dark" } = Astro.props;
 ---
-<header class="page-header" style={`--ph-bg:${bg}`}>
+<header class="page-header" style={`--ph-bg:${bg}`} data-nav-theme={navTheme}>
   <div class="ph-inner">
     {kicker && <p class="ph-kicker">{kicker}</p>}
     <h1 class="ph-title" set:html={title}></h1>

@@ -9,7 +9,7 @@ const { items = [
 ] } = Astro.props;
 const loop = [...items, ...items];
 ---
-<div class="marquee" aria-hidden="true">
+<div class="marquee" aria-hidden="true" data-nav-theme="light">
   <div class="track">
     {loop.map((t, i) => (
       <>

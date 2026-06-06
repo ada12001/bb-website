@@ -4,7 +4,7 @@
 // feathered floral wipe between items. Self-contained (markup + style + script).
 ---
 <!-- BUILD + MENU RAIL (entered from the hero above) -->
-<section class="build" id="build">
+<section class="build" id="build" data-nav-theme="dark">
   <div class="stage" id="stage">
     <div class="curtain" id="curtain"></div>
     <div class="bgword" id="bgword">BUN</div>
@@ -144,7 +144,6 @@
   const railNames = [$("rname1"), $("rname2")];
   const railImgs = [$("rimg1"), $("rimg2")];
   const railCopy = [$("rcopy1"), $("rcopy2")];
-  const logoImg = document.querySelector<HTMLImageElement>(".nav .logo");
 
   const stages = [
     { to: 0.20, bg: "#faf4ea", word: "BUN" },
@@ -257,18 +256,13 @@
       panelRGB = [0, 1, 2].map((j) => Math.round(lerp(PANELS[seg][j], PANELS[seg + 1][j], t)));
       stage.style.backgroundColor = `rgb(${panelRGB[0]},${panelRGB[1]},${panelRGB[2]})`;
     }
-    // nav theme: light over the dark hero, dynamic over the build, dark elsewhere
+    // expose THIS section's nav theme by its current panel luminance; the global
+    // nav controller (in Nav.astro) flips the navbar when this section is under it.
     const lum = (0.299 * panelRGB[0] + 0.587 * panelRGB[1] + 0.114 * panelRGB[2]) / 255;
-    const NAVH = 70;
-    const hero = document.getElementById("hero");
-    const r = build.getBoundingClientRect();
-    const overHero = !!hero && window.scrollY < hero.offsetHeight - NAVH;
-    const buildUnderNav = r.top <= NAVH && r.bottom > NAVH;
-    const navLight = overHero ? true : buildUnderNav ? lum < 0.56 : false;
-    document.body.classList.toggle("nav-light", navLight);
-    if (logoImg) {
-      const wantLogo = navLight ? "/img/logo-white.png" : "/img/logo-coral.png";
-      if (!logoImg.getAttribute("src")!.endsWith(wantLogo)) logoImg.setAttribute("src", wantLogo);
+    const navTheme = lum < 0.56 ? "light" : "dark";
+    if (build.getAttribute("data-nav-theme") !== navTheme) {
+      build.setAttribute("data-nav-theme", navTheme);
+      (window as any).__navUpdate?.();
     }
   }
 
