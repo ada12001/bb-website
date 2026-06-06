@@ -3,7 +3,25 @@ import { getCollection } from "astro:content";
 import { APP_IOS, APP_ANDROID } from "../consts";
 
 const locations = await getCollection("locations");
-// keep the Freedom Drive flagship first, rest as authored
+
+// Deep-links to a specific combo on Toast. NOTE: Toast item GUIDs are PER-LOCATION,
+// so each item needs its own URL for each location id. Where a location is missing,
+// the modal falls back to that location's normal order page.
+// To add more: open the location's Toast ordering page, click the item, copy the URL.
+const ITEMS: Record<string, { name: string; links: Record<string, string> }> = {
+  "cheesy-beaut": {
+    name: "The Cheesy Beaut Combo",
+    links: {
+      "freedom-drive": "https://order.toasttab.com/online/bossy-beulahs/item-the-cheesy-beaut-combo_7330305b-9cbb-4793-92a2-adf4d847789f",
+    },
+  },
+  "hot-thigh": {
+    name: "Hot Thigh Combo",
+    links: {
+      "ballantyne": "https://order.toasttab.com/online/bossy-beulahs-chicken-shack-5-ballantyne-tbd/item-the-hot-thigh-combo_dd4b4cfe-a88b-41b9-83d2-df0e66f389e4",
+    },
+  },
+};
 ---
 <div class="om-overlay" id="orderModal" hidden>
   <div class="om-backdrop" data-om-close></div>
@@ -12,6 +30,7 @@ const locations = await getCollection("locations");
     <p class="om-kicker">Respect the pickles</p>
     <h2 class="om-title" id="omTitle">Order Up</h2>
     <p class="om-sub">Pick your shack, then choose how you'd like to order.</p>
+    <p class="om-item" id="omItemNote" hidden></p>
 
     <span class="om-field" id="omFieldLabel">Location</span>
     <div class="om-dd" id="omDD">
@@ -21,7 +40,7 @@ const locations = await getCollection("locations");
       </button>
       <ul class="om-dd-list" id="omList" role="listbox" aria-label="Pick a location" hidden>
         {locations.map((l) => (
-          <li class="om-dd-opt" role="option" aria-selected="false" data-url={l.data.orderUrl} data-name={l.data.name}>
+          <li class="om-dd-opt" role="option" aria-selected="false" data-url={l.data.orderUrl} data-id={l.id} data-name={l.data.name}>
             <span class="opt-name">{l.data.name}</span>
             <span class="opt-city">{l.data.city}</span>
           </li>
@@ -43,6 +62,8 @@ const locations = await getCollection("locations");
       <a href={APP_IOS} target="_blank" rel="noopener">App Store</a>
       <a href={APP_ANDROID} target="_blank" rel="noopener">Google Play</a>
     </div>
+
+    <script type="application/json" id="omItems" set:html={JSON.stringify(ITEMS)}></script>
   </div>
 </div>
 
@@ -65,7 +86,9 @@ const locations = await getCollection("locations");
   .om-close:hover{opacity:1;background:rgba(0,0,0,.06)}
   .om-kicker{font-family:var(--font-script);color:var(--coral);font-size:24px;transform:rotate(-2deg);margin-bottom:2px}
   .om-title{font-family:var(--font-display);color:var(--navy);font-size:clamp(34px,7vw,48px);line-height:.9}
-  .om-sub{color:var(--ink-soft);font-size:14px;font-weight:500;margin:8px 0 22px}
+  .om-sub{color:var(--ink-soft);font-size:14px;font-weight:500;margin:8px 0 14px}
+  .om-item{display:inline-block;margin:0 0 18px;font-family:var(--font-body);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:11px;color:#fff;background:var(--coral);padding:6px 14px;border-radius:var(--radius-pill)}
+  .om-item[hidden]{display:none}
 
   .om-field{display:block;text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.12em;font-size:11px;color:var(--coral);margin-bottom:7px}
 
@@ -137,8 +160,13 @@ const locations = await getCollection("locations");
     const label = document.getElementById("omLabel") as HTMLElement;
     const list = document.getElementById("omList") as HTMLElement;
     const opts = [...list.querySelectorAll<HTMLElement>(".om-dd-opt")];
+    const note = document.getElementById("omItemNote") as HTMLElement;
+    let ITEMS: Record<string, { name: string; links: Record<string, string> }> = {};
+    try { ITEMS = JSON.parse(document.getElementById("omItems")?.textContent || "{}"); } catch {}
     let lastTrigger: HTMLElement | null = null;
     let selectedUrl = "";
+    let selectedId = "";
+    let requestedItem: string | null = null;
     let active = -1;
 
     // ---- branded dropdown ----
@@ -159,6 +187,7 @@ const locations = await getCollection("locations");
     };
     const choose = (opt: HTMLElement) => {
       selectedUrl = opt.dataset.url || "";
+      selectedId = opt.dataset.id || "";
       label.textContent = opt.dataset.name || "";
       label.classList.add("chosen");
       opts.forEach((o) => o.setAttribute("aria-selected", o === opt ? "true" : "false"));
@@ -176,6 +205,11 @@ const locations = await getCollection("locations");
     // ---- modal open/close ----
     const open = (t?: HTMLElement) => {
       lastTrigger = t || null;
+      // item context (e.g. "Add to order" on a specific combo)
+      requestedItem = t?.dataset.order ? t.dataset.order : null; // data-order="cheesy-beaut"
+      const meta = requestedItem && ITEMS[requestedItem] ? ITEMS[requestedItem] : null;
+      if (meta) { note.textContent = `Adding · ${meta.name}`; note.hidden = false; }
+      else { note.hidden = true; }
       overlay.hidden = false;
       document.body.classList.add("om-open");
       trigger.focus();
@@ -214,7 +248,12 @@ const locations = await getCollection("locations");
     });
 
     // ---- actions ----
-    online.addEventListener("click", () => { if (selectedUrl) window.open(selectedUrl, "_blank", "noopener"); });
+    online.addEventListener("click", () => {
+      if (!selectedUrl) return;
+      // deep-link to the specific combo for this location if we have it; else the menu
+      const itemUrl = requestedItem && ITEMS[requestedItem]?.links?.[selectedId];
+      window.open(itemUrl || selectedUrl, "_blank", "noopener");
+    });
     app.addEventListener("click", () => {
       const ua = navigator.userAgent || "";
       const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && (navigator as any).maxTouchPoints > 1);
