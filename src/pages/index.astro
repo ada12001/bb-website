@@ -1,6 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
-import Hero from "../components/Hero.astro";
+import HeroTrays from "../components/HeroTrays.astro";
 import BuildABeaut from "../components/BuildABeaut.astro";
 import Marquee from "../components/Marquee.astro";
 ---
@@ -8,7 +8,7 @@ import Marquee from "../components/Marquee.astro";
   title="Bossy Beulah's Chicken Shack — The Bossier the Better"
   description="Hand-breaded, no-nonsense fried chicken. Build The Beaut. Charlotte, NC — since 1906."
 >
-  <Hero />
+  <HeroTrays />
 
   <BuildABeaut />
 
@@ -20,6 +20,16 @@ import Marquee from "../components/Marquee.astro";
     <p>Spanking-fresh chicken, dipped in buttermilk and breaded by hand to seal in the juices. Potato bun, house-made pickles, and Duke's — of course. Just enough seasoning, never a show-off.</p>
     <a href="/order" class="btn" data-order>Order Yours</a>
   </section>
+
+  <!-- 10 Million Meals feature -->
+  <section class="tenmm" aria-label="10 Million Meals to Go">
+    <div class="tenmm-inner">
+      <p class="tenmm-kicker">our mission</p>
+      <div class="tenmm-graphic"><img src="/img/10mm.svg" alt="10 Million Meals to Go" /></div>
+      <p class="tenmm-body">Bossy Beulah's and Noble Food &amp; Pursuits are on a mission to share <strong>10 million meals</strong> with neighbors in need. Every sammie you grab helps us get there.</p>
+      <a class="btn tenmm-cta" href="/story">Our Story</a>
+    </div>
+  </section>
 </Base>
 
 <style>
@@ -27,4 +37,13 @@ import Marquee from "../components/Marquee.astro";
   .outro .kicker{font-family:var(--font-script);color:var(--coral);font-size:30px;transform:rotate(-2deg)}
   .outro h2{font-family:var(--font-display);font-size:clamp(40px,8vw,96px);color:var(--navy);line-height:.9;margin:6px 0 18px}
   .outro p{max-width:560px;color:#274a46;font-weight:500;font-size:17px;line-height:1.6;margin-bottom:30px}
+
+  .tenmm{background:var(--navy);color:var(--cream);text-align:center;padding:86px 24px 96px}
+  .tenmm-inner{max-width:680px;margin:0 auto;display:flex;flex-direction:column;align-items:center}
+  .tenmm-kicker{font-family:var(--font-body);font-weight:700;text-transform:uppercase;letter-spacing:.3em;font-size:13px;color:var(--coral);margin-bottom:22px}
+  .tenmm-graphic{width:min(540px,86%);margin:4px auto 0}
+  .tenmm-graphic img{width:100%;height:auto;display:block}
+  .tenmm-body{max-width:520px;margin:30px auto 0;color:#cfd3e6;font-size:17px;line-height:1.6;font-weight:500}
+  .tenmm-body strong{color:#fff}
+  .tenmm-cta{margin-top:30px}
 </style>

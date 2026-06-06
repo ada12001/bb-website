@@ -2,7 +2,10 @@
 // Ma'ono-style landing hero: full-bleed food photo + centered kicker/headline/CTAs
 // + a repeating tagline stripe. Standalone — sits above the Build-a-Beaut scroll.
 const stripe = ["CRISPY", "JUICY", "BOSSY", "HAND-BREADED", "SINCE 1906"];
-const stripeLoop = [...stripe, ...stripe, ...stripe];
+// Two IDENTICAL halves so the -50% scroll loops seamlessly (3x each = wide enough
+// to fill the viewport). The earlier 3x + -50% misaligned and jumped every loop.
+const stripeHalf = [...stripe, ...stripe, ...stripe];
+const stripeLoop = [...stripeHalf, ...stripeHalf];
 ---
 <section class="hero" id="hero">
   <div class="hero-scrim"></div>

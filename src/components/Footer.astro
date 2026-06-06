@@ -4,7 +4,32 @@ const cols = [
   { h: "Beulah's", links: [["/story","Our Story"],["/locations","Locations"],["/careers","Careers"]] },
 ];
 const year = 2026;
+
+// Noble Food & Pursuits family of brands
+const family = [
+  { name: "Rooster's", img: "/img/nfp/roosters.png", href: "https://www.roosterskitchen.com/", w: "wide" },
+  { name: "Noble Smoke", img: "/img/nfp/noble-smoke.png", href: "https://www.noblesmokebarbecue.com/", w: "tall" },
+  { name: "Bossy Beulah's", img: "/img/nfp/bossy.png", href: "https://bossybeulahs.com/", w: "" },
+  { name: "Copain", img: "/img/nfp/copain.jpg", href: "https://copainbakery.com/", w: "wide" },
+  { name: "The Jimmy", img: "/img/nfp/jimmy.png", href: "https://www.thejimmyclt.com/", w: "tall" },
+  { name: "Dream Center Church", img: "/img/nfp/dream-center-church.png", href: "https://www.dreamcenterchurchcharlotte.org/", w: "wide" },
+  { name: "Le Premier Miracle", img: "/img/nfp/miracle.png", href: "", w: "" },
+  { name: "Field Pea Catering", img: "/img/nfp/field-pea.png", href: "https://www.fieldpeacatering.com/", w: "wide" },
+  { name: "Dream Center Charlotte", img: "/img/nfp/dreamcenter.png", href: "https://www.cltdc.org/", w: "" },
+];
 ---
+<section class="nfp" aria-label="Noble Food & Pursuits family of brands">
+  <p class="nfp-kicker">Part of the family</p>
+  <img class="nfp-mark" src="/img/nfp/nfp.png" alt="Noble Food & Pursuits" loading="lazy" />
+  <div class="nfp-logos">
+    {family.map((f) => (
+      f.href
+        ? <a class={`nfp-logo nfp-logo--${f.w}`} href={f.href} target="_blank" rel="noopener" aria-label={f.name}><img src={f.img} alt={f.name} loading="lazy" /></a>
+        : <span class={`nfp-logo nfp-logo--${f.w}`}><img src={f.img} alt={f.name} loading="lazy" /></span>
+    ))}
+  </div>
+</section>
+
 <footer class="site-footer">
   <div class="inner">
     <div>
@@ -23,3 +48,16 @@ const year = 2026;
     <span>© {year} Bossy Beulah's Chicken Shack · Made in Charlotte, NC by the Nobles</span>
   </div>
 </footer>
+
+<style>
+  .nfp{background:var(--cream);text-align:center;padding:50px 24px 46px;border-top:1px solid #ece2d3}
+  .nfp-kicker{font-family:var(--font-body);font-weight:700;text-transform:uppercase;letter-spacing:.24em;font-size:11px;color:var(--coral);margin-bottom:20px}
+  .nfp-mark{height:auto;width:min(150px,42vw);margin:0 auto 28px;display:block}
+  .nfp-logos{max-width:900px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:26px 40px}
+  .nfp-logo{display:inline-flex;align-items:center;opacity:.62;transition:opacity .2s ease}
+  .nfp-logo:hover{opacity:1}
+  .nfp-logo img{height:auto;max-height:42px;max-width:128px;width:auto;display:block}
+  .nfp-logo--wide img{max-width:150px;max-height:38px}
+  .nfp-logo--tall img{max-height:52px;max-width:96px}
+  @media(max-width:600px){ .nfp-logos{gap:22px 30px} .nfp-logo img{max-height:34px;max-width:104px} }
+</style>

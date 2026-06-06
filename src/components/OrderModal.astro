@@ -1,6 +1,6 @@
 ---
 import { getCollection } from "astro:content";
-import { APP_IOS, APP_ANDROID } from "../consts";
+import { APP_IOS, APP_ANDROID, DELIVERY_DOORDASH, DELIVERY_UBEREATS } from "../consts";
 
 const locations = await getCollection("locations");
 
@@ -49,18 +49,26 @@ const ITEMS: Record<string, { name: string; links: Record<string, string> }> = {
     </div>
 
     <div class="om-actions">
-      <button class="om-btn om-online" id="omOnline" disabled>
+      <button class="om-btn om-online om-wide" id="omOnline" disabled>
         Online<small>order for pickup</small>
+      </button>
+      <button class="om-btn om-delivery" id="omDelivery">
+        Delivery<small>DoorDash · Uber Eats</small>
       </button>
       <button class="om-btn om-app" id="omApp" data-ios={APP_IOS} data-android={APP_ANDROID}>
         The App<small>iOS &amp; Android</small>
       </button>
     </div>
 
-    <div class="om-stores" id="omStores" hidden>
+    <div class="om-reveal" id="omStores" hidden>
       <span>Get the Bossy app:</span>
       <a href={APP_IOS} target="_blank" rel="noopener">App Store</a>
       <a href={APP_ANDROID} target="_blank" rel="noopener">Google Play</a>
+    </div>
+    <div class="om-reveal" id="omDelivery2" hidden>
+      <span>Get it delivered:</span>
+      <a href={DELIVERY_DOORDASH} target="_blank" rel="noopener">DoorDash</a>
+      <a href={DELIVERY_UBEREATS} target="_blank" rel="noopener">Uber Eats</a>
     </div>
 
     <script type="application/json" id="omItems" set:html={JSON.stringify(ITEMS)}></script>
@@ -131,21 +139,23 @@ const ITEMS: Record<string, { name: string; links: Record<string, string> }> = {
   .om-dd-opt[aria-selected="true"] .opt-city{color:#fff}
 
   .om-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+  .om-wide{grid-column:1 / -1}
   .om-btn{
     display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;border:none;
-    border-radius:14px;padding:16px 12px;font-family:var(--font-display);font-size:21px;color:#fff;line-height:1;
+    border-radius:14px;padding:15px 12px;font-family:var(--font-display);font-size:21px;color:#fff;line-height:1;
     transition:transform var(--dur-fast) var(--ease-out),box-shadow var(--dur-fast) var(--ease-out);
   }
   .om-btn small{font-family:var(--font-body);font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:.1em;opacity:.85}
   .om-btn:hover{transform:translateY(-2px)}
   .om-online{background:var(--coral);box-shadow:0 8px 20px rgba(240,83,72,.4)}
   .om-online:disabled{background:#e7b4af;cursor:not-allowed;box-shadow:none;transform:none}
+  .om-delivery{background:var(--mint);color:var(--navy)}
   .om-app{background:var(--navy);box-shadow:0 8px 20px rgba(30,35,73,.4)}
 
-  .om-stores{margin-top:16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;font-size:13px;color:var(--ink-soft)}
-  .om-stores[hidden]{display:none}
-  .om-stores a{font-weight:700;color:var(--navy);text-decoration:underline;text-underline-offset:3px}
-  .om-stores a:hover{color:var(--coral)}
+  .om-reveal{margin-top:14px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:center;font-size:13px;color:var(--ink-soft)}
+  .om-reveal[hidden]{display:none}
+  .om-reveal a{font-weight:700;color:var(--navy);text-decoration:underline;text-underline-offset:3px}
+  .om-reveal a:hover{color:var(--coral)}
 
   body.om-open{overflow:hidden}
 </style>
@@ -156,6 +166,9 @@ const ITEMS: Record<string, { name: string; links: Record<string, string> }> = {
     const online = document.getElementById("omOnline") as HTMLButtonElement;
     const app = document.getElementById("omApp") as HTMLButtonElement;
     const stores = document.getElementById("omStores") as HTMLElement;
+    const deliveryBtn = document.getElementById("omDelivery") as HTMLButtonElement;
+    const delivery = document.getElementById("omDelivery2") as HTMLElement;
+    const hideReveals = () => { stores.hidden = true; delivery.hidden = true; };
     const trigger = document.getElementById("omTrigger") as HTMLButtonElement;
     const label = document.getElementById("omLabel") as HTMLElement;
     const list = document.getElementById("omList") as HTMLElement;
@@ -218,7 +231,7 @@ const ITEMS: Record<string, { name: string; links: Record<string, string> }> = {
       overlay.hidden = true;
       document.body.classList.remove("om-open");
       closeList();
-      stores.hidden = true;
+      hideReveals();
       lastTrigger?.focus?.();
     };
 
@@ -260,8 +273,9 @@ const ITEMS: Record<string, { name: string; links: Record<string, string> }> = {
       const isAndroid = /Android/.test(ua);
       if (isIOS) window.open(app.dataset.ios, "_blank", "noopener");
       else if (isAndroid) window.open(app.dataset.android, "_blank", "noopener");
-      else stores.hidden = false; // desktop: let them pick a store
+      else { stores.hidden = false; delivery.hidden = true; } // desktop: let them pick a store
     });
+    deliveryBtn.addEventListener("click", () => { delivery.hidden = false; stores.hidden = true; });
 
     (window as any).__openOrder = open;
   }
