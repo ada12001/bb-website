@@ -21,6 +21,28 @@ import Marquee from "../components/Marquee.astro";
     <a href="/order" class="btn" data-order>Order Yours</a>
   </section>
 
+  <!-- Chef-driven: craft + restraint -->
+  <section class="chef" data-nav-theme="dark">
+    <div class="chef-inner">
+      <figure class="chef-media">
+        <img src="/img/chef-placeholder.jpg" alt="Inside a Bossy Beulah's Chicken Shack" />
+        <figcaption>Inside the shack</figcaption>
+      </figure>
+      <div class="chef-copy">
+        <p class="chef-kicker">from the kitchen</p>
+        <h2 class="chef-title">A short menu,<br />on purpose.</h2>
+        <p class="chef-lead">We're a modern shack with an old soul. We keep the list short so we can sweat the details — every bird brined overnight, breaded by hand, and dropped to order. Nothing frozen. Nothing rushed.</p>
+        <ul class="chef-specs">
+          <li>All-natural chicken, never frozen</li>
+          <li>Brined overnight in buttermilk</li>
+          <li>Hand-breaded, piece by piece</li>
+          <li>House pickles, Duke's mayo, toasted potato bun</li>
+        </ul>
+        <p class="chef-sign">Aunt Beulah</p>
+      </div>
+    </div>
+  </section>
+
   <!-- 10 Million Meals feature -->
   <section class="tenmm" aria-label="10 Million Meals to Go" data-nav-theme="light">
     <div class="tenmm-inner">
@@ -37,6 +59,27 @@ import Marquee from "../components/Marquee.astro";
   .outro .kicker{font-family:var(--font-script);color:var(--coral);font-size:30px;transform:rotate(-2deg)}
   .outro h2{font-family:var(--font-display);font-size:clamp(40px,8vw,96px);color:var(--navy);line-height:.9;margin:6px 0 18px}
   .outro p{max-width:560px;color:#274a46;font-weight:500;font-size:17px;line-height:1.6;margin-bottom:30px}
+
+  /* Chef-driven editorial split */
+  .chef{background:var(--cream);padding:clamp(64px,9vw,108px) 24px}
+  .chef-inner{max-width:var(--maxw);margin:0 auto;display:grid;grid-template-columns:0.82fr 1fr;gap:clamp(32px,5vw,76px);align-items:center}
+  .chef-media{position:relative;border-radius:18px;overflow:hidden;box-shadow:0 34px 64px rgba(60,30,20,.20);margin:0}
+  .chef-media img{width:100%;height:100%;object-fit:cover;display:block;aspect-ratio:4/5}
+  .chef-media figcaption{position:absolute;left:16px;bottom:16px;background:rgba(20,24,55,.78);color:#fff;font-family:var(--font-body);font-weight:700;text-transform:uppercase;letter-spacing:.14em;font-size:11px;padding:8px 14px;border-radius:var(--radius-pill);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+  .chef-copy{max-width:540px}
+  .chef-kicker{font-family:var(--font-script);color:var(--coral);font-size:30px;transform:rotate(-2deg);margin-bottom:4px}
+  .chef-title{font-family:var(--font-display);color:var(--navy);font-size:clamp(40px,5.4vw,74px);line-height:.9;margin-bottom:20px}
+  .chef-lead{color:var(--ink);font-size:18px;line-height:1.65;font-weight:500;margin-bottom:28px}
+  .chef-specs{list-style:none;display:grid;gap:13px;margin-bottom:28px}
+  .chef-specs li{position:relative;padding-left:32px;font-weight:600;color:var(--navy);font-size:16px}
+  .chef-specs li::before{content:"";position:absolute;left:0;top:2px;width:18px;height:18px;border-radius:50%;background:var(--coral)}
+  .chef-specs li::after{content:"";position:absolute;left:6px;top:5px;width:5px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+  .chef-sign{font-family:var(--font-script);color:var(--navy);font-size:40px;transform:rotate(-3deg)}
+  @media(max-width:820px){
+    .chef-inner{grid-template-columns:1fr;gap:30px}
+    .chef-media img{aspect-ratio:3/4}
+    .chef-copy{max-width:none}
+  }
 
   .tenmm{background:var(--navy);color:var(--cream);text-align:center;padding:86px 24px 96px}
   .tenmm-inner{max-width:680px;margin:0 auto;display:flex;flex-direction:column;align-items:center}
