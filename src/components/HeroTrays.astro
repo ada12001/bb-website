@@ -104,11 +104,13 @@ const trays = [
     .hp-copy .hero-kicker{justify-content:center}
     .hero-cta{justify-content:center}
 
-    /* show the WHOLE tray (cropped mobile asset via <picture>), centered beneath copy */
+    /* show the tray (cropped mobile asset via <picture>) large + centered beneath
+       copy; scale past the viewport so it reads big — the hero clips the side
+       edges of the tray slightly, but the food stays fully in frame. */
     .tray-pic{display:contents}
-    .tray-slide{inset:auto 0 9% 0;height:27%;transform:translateX(112%)}
-    .tray-img{object-fit:contain;object-position:center bottom;height:100%}
-    .tray-name{left:50%;right:auto;top:auto;bottom:calc(100% + 10px);transform:translateX(-50%)}
+    .tray-slide{inset:auto 0 8% 0;height:26%;transform:translateX(112%)}
+    .tray-img{object-fit:contain;object-position:center bottom;height:100%;transform:scale(1.28);transform-origin:center bottom}
+    .tray-name{left:50%;right:auto;top:auto;bottom:calc(100% + 36px);transform:translateX(-50%)}
     .tn-script{font-size:clamp(30px,8vw,46px)}
     .tn-tag{margin-top:7px}
     .hero2-scroll{left:50%;transform:translateX(-50%);align-items:center;bottom:22px}
