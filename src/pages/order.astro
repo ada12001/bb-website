@@ -2,47 +2,65 @@
 import Base from "../layouts/Base.astro";
 import PageHeader from "../components/PageHeader.astro";
 import { getCollection } from "astro:content";
-import { APP_IOS, APP_ANDROID } from "../consts";
+import { APP_IOS, APP_ANDROID, DELIVERY_DOORDASH, DELIVERY_UBEREATS } from "../consts";
 const locations = await getCollection("locations");
 ---
-<Base title="Order — Bossy Beulah's" description="Order The Beaut online for pickup, or grab the Bossy Beulah's app.">
+<Base title="Order — Bossy Beulah's" description="Order The Beaut on the app, online for pickup, or via DoorDash & Uber Eats.">
   <PageHeader kicker="the bossier the better" title="ORDER UP" bg="var(--coral)" navTheme="light" />
   <div class="order">
-    <p class="intro">Pick your shack to order online for pickup — or grab the app.</p>
+    <p class="intro">Three ways to get your Beaut.</p>
 
-    <ul class="shacks">
-      {locations.map((l) => (
-        <li>
-          <div class="meta">
-            <h2>{l.data.name}</h2>
-            <p>{l.data.address} · {l.data.city}</p>
-          </div>
-          {l.data.orderUrl && <a class="btn" href={l.data.orderUrl} target="_blank" rel="noopener">Order Online</a>}
-        </li>
-      ))}
-    </ul>
-
-    <div class="app">
-      <h3>Get the Bossy app</h3>
-      <div class="stores">
-        <a href={APP_IOS} target="_blank" rel="noopener">App Store</a>
-        <a href={APP_ANDROID} target="_blank" rel="noopener">Google Play</a>
+    <!-- 1. App -->
+    <section class="ord-sec">
+      <h2>Get the Bossy app</h2>
+      <p class="sub">Order ahead, earn points, and unlock app-only deals.</p>
+      <div class="btn-pair">
+        <a class="btn" href={APP_IOS} target="_blank" rel="noopener">App Store</a>
+        <a class="btn btn--navy" href={APP_ANDROID} target="_blank" rel="noopener">Google Play</a>
       </div>
-    </div>
+    </section>
+
+    <!-- 2. Order online -->
+    <section class="ord-sec">
+      <h2>Order online for pickup</h2>
+      <p class="sub">Pick your shack.</p>
+      <ul class="shacks">
+        {locations.map((l) => (
+          <li>
+            <div class="meta">
+              <h3>{l.data.name}</h3>
+              <p>{l.data.address} · {l.data.city}</p>
+            </div>
+            {l.data.orderUrl && <a class="btn" href={l.data.orderUrl} target="_blank" rel="noopener">Order Online</a>}
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <!-- 3. Delivery -->
+    <section class="ord-sec">
+      <h2>Get it delivered</h2>
+      <p class="sub">We're on DoorDash and Uber Eats.</p>
+      <div class="btn-pair">
+        <a class="btn" href={DELIVERY_DOORDASH} target="_blank" rel="noopener">DoorDash</a>
+        <a class="btn btn--navy" href={DELIVERY_UBEREATS} target="_blank" rel="noopener">Uber Eats</a>
+      </div>
+    </section>
   </div>
 </Base>
 
 <style>
   .order{max-width:680px;margin:0 auto;padding:56px 24px 96px}
-  .intro{text-align:center;font-size:18px;color:var(--ink);margin-bottom:32px}
-  .shacks{list-style:none}
-  .shacks li{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 0;border-top:1px solid #efe7da}
+  .intro{text-align:center;font-size:18px;color:var(--ink);margin-bottom:8px}
+  .ord-sec{margin-top:48px;text-align:center}
+  .ord-sec:first-of-type{margin-top:36px}
+  .ord-sec > h2{font-family:var(--font-display);color:var(--navy);font-size:clamp(24px,4vw,32px);margin-bottom:6px}
+  .ord-sec .sub{color:var(--ink-soft);font-size:15px;margin-bottom:22px}
+  .btn-pair{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+
+  .shacks{list-style:none;text-align:left;margin-top:4px}
+  .shacks li{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 0;border-top:1px solid #efe7da}
   .shacks li:last-child{border-bottom:1px solid #efe7da}
-  .shacks h2{font-family:var(--font-display);color:var(--navy);font-size:22px}
+  .shacks h3{font-family:var(--font-display);color:var(--navy);font-size:21px;font-weight:400}
   .meta p{color:var(--ink-soft);font-size:14px;margin-top:2px}
-  .app{text-align:center;margin-top:44px}
-  .app h3{font-family:var(--font-display);color:var(--coral);font-size:24px;margin-bottom:12px}
-  .stores{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
-  .stores a{font-weight:700;color:var(--navy);text-decoration:underline;text-underline-offset:3px}
-  .stores a:hover{color:var(--coral)}
 </style>

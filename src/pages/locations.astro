@@ -14,7 +14,15 @@ const locations = await getCollection("locations");
           <h2>{l.data.name}</h2>
           <span class="loc-status" data-hours={l.data.hours} aria-live="polite"></span>
         </div>
-        <p class="addr">{l.data.address}<br />{l.data.city}</p>
+        <a
+          class="addr"
+          href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`Bossy Beulah's, ${l.data.address}, ${l.data.city}`)}`}
+          target="_blank"
+          rel="noopener"
+        >
+          {l.data.address}<br />{l.data.city}
+          <span class="addr-dir">Get directions &rarr;</span>
+        </a>
         {l.data.hours && <p class="hours">{l.data.hours}</p>}
         {l.data.phone && <p><a href={`tel:${l.data.phone}`}>{l.data.phone}</a></p>}
         {l.data.orderUrl && <a class="btn" href={l.data.orderUrl} target="_blank" rel="noopener">Order Online</a>}
@@ -28,7 +36,9 @@ const locations = await getCollection("locations");
   .loc{background:#fff;border:1px solid #efe7da;border-radius:14px;padding:28px}
   .loc-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px}
   .loc h2{font-family:var(--font-display);color:var(--navy);font-size:24px}
-  .addr{color:var(--ink);font-weight:500;line-height:1.5}
+  .addr{display:inline-block;color:var(--ink);font-weight:500;line-height:1.5;text-decoration:none}
+  .addr-dir{display:block;margin-top:8px;color:var(--coral);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.07em}
+  .addr:hover .addr-dir{text-decoration:underline;text-underline-offset:3px}
   .hours{color:var(--ink-soft);margin-top:8px}
   .loc .btn{margin-top:16px}
 
