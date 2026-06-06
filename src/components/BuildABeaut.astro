@@ -16,7 +16,6 @@
       <li data-i="1"><span class="dot"></span>All-natural fried chicken</li>
       <li data-i="2"><span class="dot"></span>Power of the pickles</li>
       <li data-i="3"><span class="dot"></span>Duke's mayo + top</li>
-      <li data-i="4"><span class="dot"></span>The Beaut, served</li>
     </ul>
 
     <div class="sandwich" id="sandwich">
@@ -226,7 +225,7 @@
     topBunUpper.style.transform = `translateY(${topY}px)`;
     const done = inv(aP, 0.92, 1);
 
-    const thresholds = [0.09, 0.30, 0.58, 0.84, 0.96];
+    const thresholds = [0.09, 0.30, 0.58, 0.84];
     recipe.forEach((li, i) => li.classList.toggle("on", aP >= thresholds[i]));
     prail.style.height = (aP * 100).toFixed(1) + "%";
 
