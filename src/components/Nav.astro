@@ -74,8 +74,11 @@ const links = [
       }
 
       const bg = sampleBg();
-      nav.style.setProperty("--nav-bg", `rgb(${bg[0]},${bg[1]},${bg[2]})`); // opaque mobile bar
       const L = lum(bg);
+      // The mobile bar tints to the background under it, but it's never black
+      // (off-brand) — fall back to brand navy for very dark backgrounds.
+      const bar = L < 0.2 ? [30, 35, 73] : bg;
+      nav.style.setProperty("--nav-bg", `rgb(${bar[0]},${bar[1]},${bar[2]})`);
       // White logo/links are needed over anything the authored theme marks "light",
       // OR over a background that's actually dark or warm-saturated (coral/salmon) —
       // e.g. the coral category bars on the catering menu, which the theme doesn't tag.
