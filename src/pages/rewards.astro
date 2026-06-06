@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+import PageHeader from "../components/PageHeader.astro";
 import { APP_IOS, APP_ANDROID, REWARDS_URL, REWARDS_LOOKUP_URL } from "../consts";
 
 const earn = [
@@ -17,7 +18,7 @@ const perks = [
   title="Rewards — Aunt Beaut's Buddies"
   description="Join Aunt Beaut's Buddies. Earn a point for every dollar, unlock exclusive in-app offers, and redeem for free Bossy Beulah's food."
 >
-  <div class="rw-banner" data-nav-theme="light">Might as well earn somethin'</div>
+  <PageHeader kicker="might as well earn somethin'" title="REWARDS" bg="var(--yellow)" />
 
   <section class="rw-hero" data-nav-theme="light">
     <p class="rw-join">Join</p>
@@ -68,12 +69,6 @@ const perks = [
 </Base>
 
 <style>
-  .rw-banner{
-    background:var(--coral);color:#fff;text-align:center;font-family:var(--font-body);
-    font-weight:700;text-transform:uppercase;letter-spacing:.14em;font-size:clamp(14px,2.2vw,20px);
-    height:var(--nav-h);display:flex;align-items:center;justify-content:center;padding:0 16px;
-  }
-
   .rw-hero{background:var(--navy);color:var(--cream);text-align:center;padding:64px 24px 56px}
   .rw-join{font-family:var(--font-body);font-weight:700;text-transform:uppercase;letter-spacing:.34em;font-size:14px;color:var(--coral);margin-bottom:6px}
   .rw-title{line-height:.86}
