@@ -1,0 +1,61 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHeader from "../components/PageHeader.astro";
+import privacy from "../data/privacy.json";
+
+// blocks[0] is the "Privacy Policy" title (handled by the header)
+const blocks: string[] = (privacy as string[]).slice(1);
+
+const isBullet = (t: string) => /^[·•]/.test(t);
+const isSection = (t: string) => /^\d+\.\s/.test(t) && t === t.toUpperCase();
+const isToc = (t: string) => /^\d+\.\s/.test(t) && t !== t.toUpperCase();
+const isSub = (t: string) => /:$/.test(t) && t.length < 90 && !isBullet(t);
+
+type Node =
+  | { type: "eff" | "h2" | "h3" | "p"; text: string }
+  | { type: "ul" | "toc"; items: string[] };
+
+const nodes: Node[] = [];
+let list: { type: "ul" | "toc"; items: string[] } | null = null;
+const pushList = (type: "ul" | "toc", item: string) => {
+  if (!list || list.type !== type) { list = { type, items: [] }; nodes.push(list); }
+  list.items.push(item);
+};
+for (const raw of blocks) {
+  const t = raw.trim();
+  if (!t) continue;
+  if (isBullet(t)) { pushList("ul", t.replace(/^[·•]\s*/, "")); continue; }
+  if (isToc(t)) { pushList("toc", t); continue; }
+  list = null;
+  if (t.startsWith("Effective")) nodes.push({ type: "eff", text: t });
+  else if (isSection(t)) nodes.push({ type: "h2", text: t });
+  else if (isSub(t)) nodes.push({ type: "h3", text: t });
+  else nodes.push({ type: "p", text: t });
+}
+---
+<Base title="Privacy Policy — Bossy Beulah's" description="How Bossy Beulah's collects, uses, and protects your personal information.">
+  <PageHeader kicker="the fine print" title="PRIVACY POLICY" bg="var(--periwinkle)" />
+
+  <article class="policy">
+    {nodes.map((n) =>
+      n.type === "eff" ? <p class="eff">{n.text}</p>
+      : n.type === "h2" ? <h2>{n.text}</h2>
+      : n.type === "h3" ? <h3>{n.text}</h3>
+      : n.type === "toc" ? <ol class="toc">{n.items.map((i) => <li>{i.replace(/^\d+\.\s*/, "")}</li>)}</ol>
+      : n.type === "ul" ? <ul>{n.items.map((i) => <li>{i}</li>)}</ul>
+      : <p>{n.text}</p>
+    )}
+  </article>
+</Base>
+
+<style>
+  .policy{max-width:760px;margin:0 auto;padding:48px 24px 96px;color:var(--ink)}
+  .policy .eff{color:var(--ink-soft);font-weight:600;margin-bottom:28px}
+  .policy h2{font-family:var(--font-display);color:var(--navy);font-size:clamp(20px,3.2vw,26px);margin:38px 0 14px}
+  .policy h3{font-weight:700;color:var(--navy);font-size:16px;margin:24px 0 8px}
+  .policy p{font-size:15px;line-height:1.7;margin-bottom:14px}
+  .policy ul{margin:0 0 16px 4px;padding-left:20px}
+  .policy ul li{font-size:15px;line-height:1.6;margin-bottom:7px}
+  .policy .toc{margin:6px 0 22px;padding-left:22px}
+  .policy .toc li{font-size:15px;line-height:1.7;color:var(--navy);font-weight:600}
+</style>

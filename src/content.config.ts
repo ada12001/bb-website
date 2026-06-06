@@ -28,6 +28,7 @@ const locations = defineCollection({
     mapUrl: z.string().optional(),
     orderUrl: z.string().url().optional(),
     applyUrl: z.string().url().optional(),
+    catering: z.boolean().optional(),
     placeholder: z.boolean().optional(),
   }),
 });

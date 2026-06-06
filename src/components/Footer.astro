@@ -2,8 +2,15 @@
 const cols = [
   { h: "Eat", links: [["/menu","Menu"],["/order","Order"],["/rewards","Rewards"],["/catering","Catering"]] },
   { h: "Beulah's", links: [["/story","Our Story"],["/locations","Locations"],["/careers","Careers"]] },
+  { h: "More", links: [
+    ["https://www.toasttab.com/bossy-beulahs/giftcards?utmCampaign=onlineOrdering","Gift Cards"],
+    ["https://www.toasttab.com/bossy-beulahs/marketing-signup","Email Sign Up"],
+    ["https://www.noblefoodandpursuits.com/contact","Feedback"],
+    ["/privacy","Privacy Policy"],
+  ] },
 ];
 const year = 2026;
+const ext = (href) => href.startsWith("http");
 
 // Noble Food & Pursuits family of brands
 const family = [
@@ -39,7 +46,11 @@ const family = [
       {cols.map((c) => (
         <div>
           <h5>{c.h}</h5>
-          {c.links.map(([href, label]) => <a href={href}>{label}</a>)}
+          {c.links.map(([href, label]) => (
+            ext(href)
+              ? <a href={href} target="_blank" rel="noopener">{label}</a>
+              : <a href={href}>{label}</a>
+          ))}
         </div>
       ))}
     </nav>

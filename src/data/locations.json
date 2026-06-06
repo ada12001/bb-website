@@ -17,7 +17,8 @@
     "hours": "Daily 11a–9p",
     "phone": "(980) 366-1020",
     "orderUrl": "https://order.toasttab.com/online/bossy-beulahs-chicken-shack-5-ballantyne-tbd",
-    "applyUrl": "https://harri.com/Bossy-Beulahs-Chicken-Shack-5"
+    "applyUrl": "https://harri.com/Bossy-Beulahs-Chicken-Shack-5",
+    "catering": true
   },
   {
     "id": "park-road",
@@ -47,7 +48,8 @@
     "hours": "Daily 11a–8p",
     "phone": "(803) 288-9595",
     "orderUrl": "https://order.toasttab.com/online/bossy-beulahs-fort-mill-4-314-n-white-street",
-    "applyUrl": "https://harri.com/Nfp-Bk0mne4Wb1Pm"
+    "applyUrl": "https://harri.com/Nfp-Bk0mne4Wb1Pm",
+    "catering": true
   },
   {
     "id": "winston-salem",
@@ -57,6 +59,7 @@
     "hours": "Mon–Thu 11a–8p · Fri 11a–9p · Sat–Sun 9a–8p",
     "phone": "(336) 606-6505",
     "orderUrl": "https://order.toasttab.com/online/bossy-beulahs-3-1500-w-1st-street",
-    "applyUrl": "https://harri.com/Nfp-Bv0CFMJ67I3J"
+    "applyUrl": "https://harri.com/Nfp-Bv0CFMJ67I3J",
+    "catering": true
   }
 ]

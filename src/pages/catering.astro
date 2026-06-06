@@ -1,34 +1,86 @@
 ---
 import Base from "../layouts/Base.astro";
 import PageHeader from "../components/PageHeader.astro";
+import { getCollection } from "astro:content";
+
+const CATERING_EMAIL = "bossycatering@noblefoodandpursuits.com";
+const MENU_PDF = "/catering-menu.pdf";
+
+// catering order URL = toasttab.com/catering/<slug>, where <slug> comes from the order URL
+const slugOf = (orderUrl?: string) => (orderUrl ? orderUrl.split("/online/")[1] : "");
+const cateringLocations = (await getCollection("locations"))
+  .filter((l) => l.data.catering)
+  .map((l) => ({ name: l.data.name, city: l.data.city, url: `https://www.toasttab.com/catering/${slugOf(l.data.orderUrl)}` }));
+
+const steps = [
+  { n: "1", h: "Place your order online", p: "Browse the catering menu and build your spread." },
+  { n: "2", h: "Set the time + date", p: "Tell us when you need it — we'll have it ready." },
+  { n: "3", h: "Choose delivery or pick up", p: "We'll bring it to you, or have it waiting at the shack." },
+];
 ---
-<Base title="Catering — Bossy Beulah's" description="Feed the whole crew. Bossy Beulah's catering for offices, parties & events.">
+<Base title="Catering — Bossy Beulah's" description="All-natural chicken for all occasions. Bossy Beulah's catering for offices, parties, and tailgates.">
   <PageHeader kicker="feed the whole crew" title="CATERING" bg="var(--yellow)" />
+
   <div class="cater">
-    <p>From box lunches to full spreads — let Bossy do the bossing. Tell us about your event and we'll take it from there.</p>
-    <form class="inquiry" name="catering" onsubmit="return false">
-      <div class="grid">
-        <label>Name<input type="text" name="name" required /></label>
-        <label>Email<input type="email" name="email" required /></label>
-        <label>Phone<input type="tel" name="phone" /></label>
-        <label>Event date<input type="date" name="date" /></label>
-        <label>Headcount<input type="number" name="headcount" min="1" /></label>
-        <label>Location<input type="text" name="location" /></label>
-      </div>
-      <label>Details<textarea name="details" rows="4"></textarea></label>
-      <button class="btn" type="submit">Send inquiry</button>
-      <p class="note">Placeholder form — connect to email / form handler (Vercel + Formspree, Resend, etc.).</p>
-    </form>
+    <h2 class="lead">All-Natural Chicken for All Occasions</h2>
+    <p class="intro">Our recently expanded catering menu offers high-quality, all-natural chicken in sandwiches, bites, and wings, plus healthy and hearty salads, a variety of sides, and desserts by Copain Bakery. Show your office who's boss, upgrade your birthday party spread with chicken that's kid- and parent-approved, or be the envy of the tailgate lot.</p>
+
+    <div class="cta-row">
+      <a class="btn" href={MENU_PDF} target="_blank" rel="noopener">View the Catering Menu</a>
+      <a class="btn-ghost-navy" href={`mailto:${CATERING_EMAIL}`}>Contact the Catering Team</a>
+    </div>
+
+    <h3 class="sec">How it works</h3>
+    <ol class="steps">
+      {steps.map((s) => (
+        <li>
+          <span class="num">{s.n}</span>
+          <div>
+            <strong>{s.h}</strong>
+            <p>{s.p}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+
+    <h3 class="sec">Order catering</h3>
+    <p class="avail">Available for pickup or delivery from these shacks:</p>
+    <ul class="cater-locs">
+      {cateringLocations.map((l) => (
+        <li>
+          <div>
+            <h4>{l.name}</h4>
+            <p>{l.city}</p>
+          </div>
+          <a class="btn" href={l.url} target="_blank" rel="noopener">Order Catering</a>
+        </li>
+      ))}
+    </ul>
+    <p class="foot">Bigger event or a custom spread? Email <a href={`mailto:${CATERING_EMAIL}`}>{CATERING_EMAIL}</a>.</p>
   </div>
 </Base>
 
 <style>
-  .cater{max-width:680px;margin:0 auto;padding:56px 24px 96px}
-  .cater > p{font-size:18px;line-height:1.6;color:var(--ink);margin-bottom:28px}
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-  label{display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--navy);margin-bottom:16px}
-  input,textarea{font-family:inherit;font-size:15px;font-weight:400;text-transform:none;letter-spacing:normal;padding:11px 13px;border:1px solid #e0d6c7;border-radius:8px;background:#fff}
-  .inquiry .btn{margin-top:6px}
-  .note{margin-top:18px;font-size:12px;color:var(--coral)}
-  @media(max-width:560px){ .grid{grid-template-columns:1fr} }
+  .cater{max-width:720px;margin:0 auto;padding:56px 24px 96px}
+  .lead{font-family:var(--font-display);color:var(--coral);font-size:clamp(28px,5vw,44px);line-height:1.04;margin-bottom:18px}
+  .intro{font-size:18px;line-height:1.7;color:var(--ink);margin-bottom:26px}
+  .cta-row{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:8px}
+  .btn-ghost-navy{display:inline-block;background:transparent;color:var(--navy);font-weight:700;text-transform:uppercase;letter-spacing:.1em;font-size:var(--step--1);padding:13px 30px;border:2px solid var(--navy);border-radius:var(--radius-pill);transition:all var(--dur-fast) var(--ease-out)}
+  .btn-ghost-navy:hover{background:var(--navy);color:#fff;transform:translateY(-2px)}
+
+  .sec{font-family:var(--font-display);color:var(--navy);font-size:clamp(24px,4vw,32px);margin:44px 0 18px}
+  .steps{list-style:none;display:grid;gap:16px}
+  .steps li{display:flex;gap:16px;align-items:flex-start}
+  .steps .num{flex:0 0 auto;width:38px;height:38px;border-radius:50%;background:var(--coral);color:#fff;font-family:var(--font-display);font-size:20px;display:flex;align-items:center;justify-content:center}
+  .steps strong{display:block;color:var(--navy);font-size:18px;font-family:var(--font-display);font-weight:400}
+  .steps p{color:var(--ink-soft);font-size:15px;margin-top:2px}
+
+  .avail{color:var(--ink-soft);margin-bottom:8px}
+  .cater-locs{list-style:none}
+  .cater-locs li{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 0;border-top:1px solid #efe7da}
+  .cater-locs li:last-child{border-bottom:1px solid #efe7da}
+  .cater-locs h4{font-family:var(--font-display);color:var(--navy);font-size:20px}
+  .cater-locs li > div p{color:var(--ink-soft);font-size:14px;margin-top:2px}
+  .foot{margin-top:26px;color:var(--ink-soft);font-size:15px}
+  .foot a{color:var(--coral);font-weight:600}
 </style>
