@@ -72,13 +72,16 @@ const links = [
         const b = s.getBoundingClientRect();
         if (b.top <= line && b.bottom > line) { theme = s.getAttribute("data-nav-theme") || "dark"; break; }
       }
-      document.body.classList.toggle("nav-light", theme === "light");
 
-      // Background-aware tweaks: keep hover stickers visible, and make the Order
-      // button coral when it sits over a dark (e.g. navy) background.
       const bg = sampleBg();
       nav.style.setProperty("--nav-bg", `rgb(${bg[0]},${bg[1]},${bg[2]})`); // opaque mobile bar
-      document.body.classList.toggle("nav-bg-dark", lum(bg) < 0.32);
+      const L = lum(bg);
+      // White logo/links are needed over anything the authored theme marks "light",
+      // OR over a background that's actually dark or warm-saturated (coral/salmon) —
+      // e.g. the coral category bars on the catering menu, which the theme doesn't tag.
+      const warm = bg[0] > 200 && bg[0] - bg[2] > 60 && bg[0] - bg[1] > 40;
+      document.body.classList.toggle("nav-light", theme === "light" || L < 0.56 || warm);
+      document.body.classList.toggle("nav-bg-dark", L < 0.32);
       // Only fall back to a navy sticker when the sticker colour is essentially the
       // SAME as the background it sits on (e.g. Rewards' coral over the coral header,
       // Locations' periwinkle over the periwinkle header). Distinct-but-related hues
