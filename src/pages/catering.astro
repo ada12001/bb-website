@@ -171,6 +171,11 @@ const menu: { title: string; note?: string; items: MItem[] }[] = [
   .cater-locs{list-style:none}
   .cater-locs li{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 0;border-top:1px solid #efe7da}
   .cater-locs li:last-child{border-bottom:1px solid #efe7da}
+  .cater-locs .btn{white-space:nowrap;flex-shrink:0}
+  @media(max-width:520px){
+    .cater-locs li{flex-direction:column;align-items:stretch;gap:14px}
+    .cater-locs li .btn{display:block;text-align:center}
+  }
   .cater-locs h4{font-family:var(--font-display);color:var(--navy);font-size:20px}
   .cater-locs li > div p{color:var(--ink-soft);font-size:14px;margin-top:2px}
   .foot{margin-top:26px;color:var(--ink-soft);font-size:15px}

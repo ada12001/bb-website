@@ -58,6 +58,11 @@ const values = [
   .hiring{list-style:none}
   .hiring li{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 0;border-top:1px solid #efe7da}
   .hiring li:last-child{border-bottom:1px solid #efe7da}
+  .hiring .btn{white-space:nowrap;flex-shrink:0}
+  @media(max-width:520px){
+    .hiring li{flex-direction:column;align-items:stretch;gap:14px}
+    .hiring li .btn{display:block;text-align:center}
+  }
   .hiring h3{font-family:var(--font-display);color:var(--navy);font-size:21px}
   .hiring li > div p{color:var(--ink-soft);font-size:14px;margin-top:2px}
   .hiring .soon{color:var(--ink-soft);font-style:italic}
