@@ -111,6 +111,10 @@ const trays = [
     .tray-slide{inset:auto 0 8% 0;height:26%;transform:translateX(112%)}
     .tray-img{object-fit:contain;object-position:center bottom;height:100%;transform:scale(1.28);transform-origin:center bottom}
     .tray-name{left:50%;right:auto;top:auto;bottom:calc(100% + 36px);transform:translateX(-50%)}
+    /* nudge each label over its food: Beaut left of its sandwich, Tenders/Wings right */
+    .tray-slide[data-i="0"] .tray-name{left:49%}
+    .tray-slide[data-i="1"] .tray-name{left:55%}
+    .tray-slide[data-i="2"] .tray-name{left:55%}
     .tn-script{font-size:clamp(30px,8vw,46px)}
     .tn-tag{margin-top:7px}
     .hero2-scroll{left:50%;transform:translateX(-50%);align-items:center;bottom:22px}
