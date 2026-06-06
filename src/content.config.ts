@@ -26,6 +26,7 @@ const locations = defineCollection({
     hours: z.string().optional(),
     phone: z.string().optional(),
     mapUrl: z.string().optional(),
+    orderUrl: z.string().url().optional(),
     placeholder: z.boolean().optional(),
   }),
 });

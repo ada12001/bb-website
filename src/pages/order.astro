@@ -1,26 +1,48 @@
 ---
 import Base from "../layouts/Base.astro";
 import PageHeader from "../components/PageHeader.astro";
-// TODO: wire to the real ordering provider (Toast / Olo / app deep-link).
-const providers = [
-  { label: "Order Pickup", href: "#" },
-  { label: "Order Delivery", href: "#" },
-];
+import { getCollection } from "astro:content";
+import { APP_IOS, APP_ANDROID } from "../consts";
+const locations = await getCollection("locations");
 ---
-<Base title="Order — Bossy Beulah's" description="Order The Beaut for pickup or delivery.">
-  <PageHeader kicker="the bossier the better" title="ORDER NOW" bg="var(--coral)" />
+<Base title="Order — Bossy Beulah's" description="Order The Beaut online for pickup, or grab the Bossy Beulah's app.">
+  <PageHeader kicker="the bossier the better" title="ORDER UP" bg="var(--coral)" />
   <div class="order">
-    <p>Pick your poison. Online ordering links out to our ordering partner.</p>
-    <div class="opts">
-      {providers.map((p) => <a class="btn" href={p.href}>{p.label}</a>)}
+    <p class="intro">Pick your shack to order online for pickup — or grab the app.</p>
+
+    <ul class="shacks">
+      {locations.map((l) => (
+        <li>
+          <div class="meta">
+            <h2>{l.data.name}</h2>
+            <p>{l.data.address} · {l.data.city}</p>
+          </div>
+          {l.data.orderUrl && <a class="btn" href={l.data.orderUrl} target="_blank" rel="noopener">Order Online</a>}
+        </li>
+      ))}
+    </ul>
+
+    <div class="app">
+      <h3>Get the Bossy app</h3>
+      <div class="stores">
+        <a href={APP_IOS} target="_blank" rel="noopener">App Store</a>
+        <a href={APP_ANDROID} target="_blank" rel="noopener">Google Play</a>
+      </div>
     </div>
-    <p class="note">Placeholder — connect the real ordering provider / deep links.</p>
   </div>
 </Base>
 
 <style>
-  .order{max-width:560px;margin:0 auto;padding:56px 24px 96px;text-align:center}
-  .order p{font-size:18px;color:var(--ink);margin-bottom:28px}
-  .opts{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
-  .note{margin-top:32px;font-size:12px;color:var(--coral)}
+  .order{max-width:680px;margin:0 auto;padding:56px 24px 96px}
+  .intro{text-align:center;font-size:18px;color:var(--ink);margin-bottom:32px}
+  .shacks{list-style:none}
+  .shacks li{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 0;border-top:1px solid #efe7da}
+  .shacks li:last-child{border-bottom:1px solid #efe7da}
+  .shacks h2{font-family:var(--font-display);color:var(--navy);font-size:22px}
+  .meta p{color:var(--ink-soft);font-size:14px;margin-top:2px}
+  .app{text-align:center;margin-top:44px}
+  .app h3{font-family:var(--font-display);color:var(--coral);font-size:24px;margin-bottom:12px}
+  .stores{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+  .stores a{font-weight:700;color:var(--navy);text-decoration:underline;text-underline-offset:3px}
+  .stores a:hover{color:var(--coral)}
 </style>

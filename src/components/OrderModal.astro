@@ -1,0 +1,141 @@
+---
+import { getCollection } from "astro:content";
+import { APP_IOS, APP_ANDROID } from "../consts";
+
+const locations = await getCollection("locations");
+// keep the Freedom Drive flagship first, rest as authored
+---
+<div class="om-overlay" id="orderModal" hidden>
+  <div class="om-backdrop" data-om-close></div>
+  <div class="om-dialog" role="dialog" aria-modal="true" aria-labelledby="omTitle">
+    <button class="om-close" data-om-close aria-label="Close">&times;</button>
+    <p class="om-kicker">Respect the pickles</p>
+    <h2 class="om-title" id="omTitle">Order Up</h2>
+    <p class="om-sub">Pick your shack, then choose how you'd like to order.</p>
+
+    <label class="om-field" for="omLocation">Location</label>
+    <select class="om-select" id="omLocation">
+      <option value="" disabled selected>Choose your shack…</option>
+      {locations.map((l) => (
+        <option value={l.data.orderUrl}>{l.data.name} — {l.data.city}</option>
+      ))}
+    </select>
+
+    <div class="om-actions">
+      <button class="om-btn om-online" id="omOnline" disabled>
+        Online<small>order for pickup</small>
+      </button>
+      <button class="om-btn om-app" id="omApp" data-ios={APP_IOS} data-android={APP_ANDROID}>
+        The App<small>iOS &amp; Android</small>
+      </button>
+    </div>
+
+    <div class="om-stores" id="omStores" hidden>
+      <span>Get the Bossy app:</span>
+      <a href={APP_IOS} target="_blank" rel="noopener">App Store</a>
+      <a href={APP_ANDROID} target="_blank" rel="noopener">Google Play</a>
+    </div>
+  </div>
+</div>
+
+<style is:global>
+  .om-overlay{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px}
+  .om-overlay[hidden]{display:none}
+  .om-backdrop{position:absolute;inset:0;background:rgba(20,16,11,.62);backdrop-filter:blur(4px);animation:omFade .2s ease}
+  .om-dialog{
+    position:relative;z-index:1;width:min(440px,100%);background:var(--cream);
+    border-radius:18px;padding:34px 30px 30px;text-align:center;
+    box-shadow:0 30px 80px rgba(20,16,11,.45);animation:omPop .26s var(--ease-out);
+  }
+  @keyframes omFade{from{opacity:0}to{opacity:1}}
+  @keyframes omPop{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}
+
+  .om-close{
+    position:absolute;top:12px;right:14px;width:34px;height:34px;border:none;cursor:pointer;
+    background:transparent;color:var(--navy);font-size:26px;line-height:1;border-radius:50%;opacity:.6;
+  }
+  .om-close:hover{opacity:1;background:rgba(0,0,0,.06)}
+  .om-kicker{font-family:var(--font-script);color:var(--coral);font-size:24px;transform:rotate(-2deg);margin-bottom:2px}
+  .om-title{font-family:var(--font-display);color:var(--navy);font-size:clamp(34px,7vw,48px);line-height:.9}
+  .om-sub{color:var(--ink-soft);font-size:14px;font-weight:500;margin:8px 0 22px}
+
+  .om-field{display:block;text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.12em;font-size:11px;color:var(--coral);margin-bottom:7px}
+  .om-select{
+    width:100%;font-family:inherit;font-size:16px;font-weight:500;color:var(--navy);
+    padding:13px 14px;border:2px solid #e2d8c8;border-radius:12px;background:#fff;cursor:pointer;
+    appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--navy) 50%),linear-gradient(135deg,var(--navy) 50%,transparent 50%);
+    background-position:calc(100% - 20px) center,calc(100% - 14px) center;background-size:6px 6px,6px 6px;background-repeat:no-repeat;
+  }
+  .om-select:focus{outline:none;border-color:var(--coral)}
+
+  .om-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+  .om-btn{
+    display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;border:none;
+    border-radius:14px;padding:16px 12px;font-family:var(--font-display);font-size:21px;color:#fff;line-height:1;
+    transition:transform var(--dur-fast) var(--ease-out),box-shadow var(--dur-fast) var(--ease-out);
+  }
+  .om-btn small{font-family:var(--font-body);font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:.1em;opacity:.85}
+  .om-btn:hover{transform:translateY(-2px)}
+  .om-online{background:var(--coral);box-shadow:0 8px 20px rgba(240,83,72,.4)}
+  .om-online:disabled{background:#e7b4af;cursor:not-allowed;box-shadow:none;transform:none}
+  .om-app{background:var(--navy);box-shadow:0 8px 20px rgba(30,35,73,.4)}
+
+  .om-stores{margin-top:16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;font-size:13px;color:var(--ink-soft)}
+  .om-stores[hidden]{display:none}
+  .om-stores a{font-weight:700;color:var(--navy);text-decoration:underline;text-underline-offset:3px}
+  .om-stores a:hover{color:var(--coral)}
+
+  body.om-open{overflow:hidden}
+</style>
+
+<script>
+  const overlay = document.getElementById("orderModal");
+  if (overlay) {
+    const sel = document.getElementById("omLocation") as HTMLSelectElement;
+    const online = document.getElementById("omOnline") as HTMLButtonElement;
+    const app = document.getElementById("omApp") as HTMLButtonElement;
+    const stores = document.getElementById("omStores") as HTMLElement;
+    let lastTrigger: HTMLElement | null = null;
+
+    const open = (trigger?: HTMLElement) => {
+      lastTrigger = trigger || null;
+      overlay.hidden = false;
+      document.body.classList.add("om-open");
+      (sel || overlay).focus?.();
+    };
+    const close = () => {
+      overlay.hidden = true;
+      document.body.classList.remove("om-open");
+      stores.hidden = true;
+      lastTrigger?.focus?.();
+    };
+
+    // open from any [data-order] trigger (links keep /order as a no-JS fallback)
+    document.querySelectorAll<HTMLElement>("[data-order]").forEach((el) => {
+      el.addEventListener("click", (e) => { e.preventDefault(); open(el); });
+    });
+    overlay.querySelectorAll("[data-om-close]").forEach((el) =>
+      el.addEventListener("click", close)
+    );
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !overlay.hidden) close(); });
+
+    // location selector enables the Online button
+    sel?.addEventListener("change", () => { online.disabled = !sel.value; });
+    online?.addEventListener("click", () => {
+      if (sel.value) window.open(sel.value, "_blank", "noopener");
+    });
+
+    // app button: route to the right store by OS; on desktop reveal both
+    app?.addEventListener("click", () => {
+      const ua = navigator.userAgent || "";
+      const isIOS = /iPad|iPhone|iPod/.test(ua) ||
+        (navigator.platform === "MacIntel" && (navigator as any).maxTouchPoints > 1);
+      const isAndroid = /Android/.test(ua);
+      if (isIOS) window.open(app.dataset.ios, "_blank", "noopener");
+      else if (isAndroid) window.open(app.dataset.android, "_blank", "noopener");
+      else stores.hidden = false; // desktop: let them pick a store
+    });
+
+    (window as any).__openOrder = open;
+  }
+</script>

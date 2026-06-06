@@ -1,12 +1,56 @@
 [
   {
-    "id": "charlotte",
-    "name": "Bossy Beulah's — Charlotte",
-    "address": "1320 S Church St",
-    "city": "Charlotte, NC 28203",
-    "hours": "Mon–Sun · 11am–9pm",
-    "phone": "",
-    "mapUrl": "",
-    "placeholder": true
+    "id": "freedom-drive",
+    "name": "Freedom Drive",
+    "address": "2200 Freedom Dr",
+    "city": "Charlotte, NC 28208",
+    "hours": "Sun–Thu 11a–8p · Fri–Sat 11a–9p",
+    "phone": "(980) 737-1400",
+    "orderUrl": "https://order.toasttab.com/online/bossy-beulahs"
+  },
+  {
+    "id": "ballantyne",
+    "name": "Ballantyne",
+    "address": "15110 Bowl St, Suite 103",
+    "city": "Charlotte, NC",
+    "hours": "Daily 11a–9p",
+    "phone": "(980) 366-1020",
+    "orderUrl": "https://order.toasttab.com/online/bossy-beulahs-chicken-shack-5-ballantyne-tbd"
+  },
+  {
+    "id": "park-road",
+    "name": "Park Road",
+    "address": "512 Brandywine Rd, Suite 500",
+    "city": "Charlotte, NC 28209",
+    "hours": "Daily 11a–9p",
+    "phone": "(980) 443-2020",
+    "orderUrl": "https://order.toasttab.com/online/bossy-beulahs-chicken-shack-park-road-512-brandywine-road-unit-500"
+  },
+  {
+    "id": "concord",
+    "name": "Concord",
+    "address": "3070 DeRita Rd",
+    "city": "Charlotte, NC 28027",
+    "hours": "Daily 11a–9p",
+    "phone": "(980) 366-1100",
+    "orderUrl": "https://order.toasttab.com/online/bossy-beulahs-chicken-shack-concord-concord-parkway-north"
+  },
+  {
+    "id": "fort-mill",
+    "name": "Fort Mill",
+    "address": "314 N. White St",
+    "city": "Fort Mill, SC",
+    "hours": "Daily 11a–8p",
+    "phone": "(803) 288-9595",
+    "orderUrl": "https://order.toasttab.com/online/bossy-beulahs-fort-mill-4-314-n-white-street"
+  },
+  {
+    "id": "winston-salem",
+    "name": "Winston-Salem (Ardmore)",
+    "address": "1500 West First St",
+    "city": "Winston-Salem, NC",
+    "hours": "Mon–Thu 11a–8p · Fri 11a–9p · Sat–Sun 9a–8p",
+    "phone": "(336) 606-6505",
+    "orderUrl": "https://order.toasttab.com/online/bossy-beulahs-3-1500-w-1st-street"
   }
 ]

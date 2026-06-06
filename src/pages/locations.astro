@@ -14,10 +14,7 @@ const locations = await getCollection("locations");
         <p class="addr">{l.data.address}<br />{l.data.city}</p>
         {l.data.hours && <p class="hours">{l.data.hours}</p>}
         {l.data.phone && <p><a href={`tel:${l.data.phone}`}>{l.data.phone}</a></p>}
-        {l.data.mapUrl
-          ? <a class="btn" href={l.data.mapUrl}>Get directions</a>
-          : <span class="soon">Details coming soon</span>}
-        {l.data.placeholder && <p class="note">Placeholder — confirm real address, hours &amp; map link.</p>}
+        {l.data.orderUrl && <a class="btn" href={l.data.orderUrl} target="_blank" rel="noopener">Order Online</a>}
       </div>
     ))}
   </div>
