@@ -9,6 +9,10 @@ const locations = await getCollection("locations");
 // works for every location automatically (and any future ones).
 // `unavailable` = location ids that don't carry the item (fall back to the menu).
 const ITEMS: Record<string, { name: string; path: string; unavailable?: string[] }> = {
+  "the-beaut": {
+    name: "The Beaut Combo",
+    path: "item-the-beaut-combo_da47dd66-4b21-4fec-b040-8384de9f2ded",
+  },
   "cheesy-beaut": {
     name: "The Cheesy Beaut Combo",
     path: "item-the-cheesy-beaut-combo_7330305b-9cbb-4793-92a2-adf4d847789f",
