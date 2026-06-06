@@ -4,22 +4,19 @@ import { APP_IOS, APP_ANDROID, DELIVERY_DOORDASH, DELIVERY_UBEREATS } from "../c
 
 const locations = await getCollection("locations");
 
-// Deep-links to a specific combo on Toast. NOTE: Toast item GUIDs are PER-LOCATION,
-// so each item needs its own URL for each location id. Where a location is missing,
-// the modal falls back to that location's normal order page.
-// To add more: open the location's Toast ordering page, click the item, copy the URL.
-const ITEMS: Record<string, { name: string; links: Record<string, string> }> = {
+// Deep-links to a specific combo on Toast. Toast item GUIDs are SHARED across all
+// locations, so we just append the item path to a location's base order URL —
+// works for every location automatically (and any future ones).
+// `unavailable` = location ids that don't carry the item (fall back to the menu).
+const ITEMS: Record<string, { name: string; path: string; unavailable?: string[] }> = {
   "cheesy-beaut": {
     name: "The Cheesy Beaut Combo",
-    links: {
-      "freedom-drive": "https://order.toasttab.com/online/bossy-beulahs/item-the-cheesy-beaut-combo_7330305b-9cbb-4793-92a2-adf4d847789f",
-    },
+    path: "item-the-cheesy-beaut-combo_7330305b-9cbb-4793-92a2-adf4d847789f",
+    unavailable: ["park-road"], // not listed at Park Road (pending confirmation)
   },
   "hot-thigh": {
     name: "Hot Thigh Combo",
-    links: {
-      "ballantyne": "https://order.toasttab.com/online/bossy-beulahs-chicken-shack-5-ballantyne-tbd/item-the-hot-thigh-combo_dd4b4cfe-a88b-41b9-83d2-df0e66f389e4",
-    },
+    path: "item-the-hot-thigh-combo_dd4b4cfe-a88b-41b9-83d2-df0e66f389e4",
   },
 };
 ---
@@ -174,7 +171,7 @@ const ITEMS: Record<string, { name: string; links: Record<string, string> }> = {
     const list = document.getElementById("omList") as HTMLElement;
     const opts = [...list.querySelectorAll<HTMLElement>(".om-dd-opt")];
     const note = document.getElementById("omItemNote") as HTMLElement;
-    let ITEMS: Record<string, { name: string; links: Record<string, string> }> = {};
+    let ITEMS: Record<string, { name: string; path: string; unavailable?: string[] }> = {};
     try { ITEMS = JSON.parse(document.getElementById("omItems")?.textContent || "{}"); } catch {}
     let lastTrigger: HTMLElement | null = null;
     let selectedUrl = "";
@@ -263,9 +260,14 @@ const ITEMS: Record<string, { name: string; links: Record<string, string> }> = {
     // ---- actions ----
     online.addEventListener("click", () => {
       if (!selectedUrl) return;
-      // deep-link to the specific combo for this location if we have it; else the menu
-      const itemUrl = requestedItem && ITEMS[requestedItem]?.links?.[selectedId];
-      window.open(itemUrl || selectedUrl, "_blank", "noopener");
+      // build the combo deep-link by appending the shared item path to this
+      // location's base order URL (unless the item isn't carried there)
+      let target = selectedUrl;
+      const meta = requestedItem ? ITEMS[requestedItem] : null;
+      if (meta && meta.path && !(meta.unavailable || []).includes(selectedId)) {
+        target = selectedUrl.replace(/\/+$/, "") + "/" + meta.path;
+      }
+      window.open(target, "_blank", "noopener");
     });
     app.addEventListener("click", () => {
       const ua = navigator.userAgent || "";

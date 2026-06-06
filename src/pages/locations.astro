@@ -4,13 +4,16 @@ import PageHeader from "../components/PageHeader.astro";
 import { getCollection } from "astro:content";
 const locations = await getCollection("locations");
 ---
-<Base title="Locations — Bossy Beulah's" description="Find your nearest Bossy Beulah's Chicken Shack.">
+<Base title="Locations — Bossy Beulah's" description="Find your nearest Bossy Beulah's Chicken Shack — hours, directions, and online ordering.">
   <PageHeader kicker="come on in" title="LOCATIONS" bg="var(--periwinkle)" />
 
   <div class="locs">
     {locations.map((l) => (
       <div class="loc">
-        <h2>{l.data.name}</h2>
+        <div class="loc-head">
+          <h2>{l.data.name}</h2>
+          <span class="loc-status" data-hours={l.data.hours} aria-live="polite"></span>
+        </div>
         <p class="addr">{l.data.address}<br />{l.data.city}</p>
         {l.data.hours && <p class="hours">{l.data.hours}</p>}
         {l.data.phone && <p><a href={`tel:${l.data.phone}`}>{l.data.phone}</a></p>}
@@ -21,12 +24,90 @@ const locations = await getCollection("locations");
 </Base>
 
 <style>
-  .locs{max-width:var(--maxw);margin:0 auto;padding:56px 24px 96px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:28px}
+  .locs{max-width:var(--maxw);margin:0 auto;padding:56px 24px 96px;display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:28px}
   .loc{background:#fff;border:1px solid #efe7da;border-radius:14px;padding:28px}
-  .loc h2{font-family:var(--font-display);color:var(--navy);font-size:24px;margin-bottom:10px}
+  .loc-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+  .loc h2{font-family:var(--font-display);color:var(--navy);font-size:24px}
   .addr{color:var(--ink);font-weight:500;line-height:1.5}
   .hours{color:var(--ink-soft);margin-top:8px}
   .loc .btn{margin-top:16px}
-  .soon{display:inline-block;margin-top:16px;color:var(--ink-soft);font-style:italic}
-  .note{margin-top:14px;font-size:12px;color:var(--coral)}
+
+  /* live open/closed badge */
+  .loc-status{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-body);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:11px;padding:4px 10px 4px 9px;border-radius:999px;opacity:0;transition:opacity .2s ease}
+  .loc-status.ready{opacity:1}
+  .loc-status::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor;box-shadow:0 0 0 3px color-mix(in srgb, currentColor 22%, transparent)}
+  .loc-status.is-open{color:#2f8f4e;background:#e8f6ec}
+  .loc-status.is-closing{color:#c47d12;background:#fbf0dc}
+  .loc-status.is-closed{color:#9a3b3b;background:#f7e7e7}
 </style>
+
+<script>
+  const DAYS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+  const CLOSING_SOON_MINS = 30;
+
+  const parseTime = (t: string): number | null => {
+    const m = t.trim().match(/^(\d{1,2})(?::(\d{2}))?\s*([ap])$/i);
+    if (!m) return null;
+    let h = parseInt(m[1], 10);
+    const min = m[2] ? parseInt(m[2], 10) : 0;
+    const pm = m[3].toLowerCase() === "p";
+    if (pm && h !== 12) h += 12;
+    if (!pm && h === 12) h = 0;
+    return h * 60 + min;
+  };
+
+  // "Sun–Thu 11a–8p · Fri 11a–9p · Sat–Sun 9a–8p" / "Daily 11a–9p" -> [open,close]|null per weekday
+  const parseHours = (str: string): (number[] | null)[] => {
+    const sched: (number[] | null)[] = new Array(7).fill(null);
+    if (!str) return sched;
+    for (const seg of str.split(/[·,;]/).map((s) => s.trim()).filter(Boolean)) {
+      const m = seg.match(/^([A-Za-z]+)(?:\s*[–-]\s*([A-Za-z]+))?\s+(\d{1,2}(?::\d{2})?\s*[ap])\s*[–-]\s*(\d{1,2}(?::\d{2})?\s*[ap])$/i);
+      if (!m) continue;
+      const open = parseTime(m[3]), close = parseTime(m[4]);
+      if (open == null || close == null) continue;
+      let days: number[] = [];
+      if (m[1].toLowerCase().startsWith("daily")) {
+        days = [0, 1, 2, 3, 4, 5, 6];
+      } else {
+        const d1 = DAYS.indexOf(m[1].slice(0, 3).toLowerCase());
+        if (d1 < 0) continue;
+        if (m[2]) {
+          const d2 = DAYS.indexOf(m[2].slice(0, 3).toLowerCase());
+          if (d2 < 0) continue;
+          let i = d1; days.push(i);
+          while (i !== d2) { i = (i + 1) % 7; days.push(i); }
+        } else days = [d1];
+      }
+      for (const d of days) sched[d] = [open, close];
+    }
+    return sched;
+  };
+
+  const nowEastern = () => {
+    const parts = new Intl.DateTimeFormat("en-US", {
+      timeZone: "America/New_York", weekday: "short", hour: "2-digit", minute: "2-digit", hour12: false,
+    }).formatToParts(new Date());
+    const get = (t: string) => parts.find((p) => p.type === t)?.value || "";
+    const day = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].indexOf(get("weekday"));
+    let hh = parseInt(get("hour"), 10); if (hh === 24) hh = 0;
+    return { day, mins: hh * 60 + parseInt(get("minute"), 10) };
+  };
+
+  const update = () => {
+    const { day, mins } = nowEastern();
+    document.querySelectorAll<HTMLElement>(".loc-status").forEach((el) => {
+      const sched = parseHours(el.dataset.hours || "");
+      const today = sched[day];
+      let cls = "is-closed", label = "Closed";
+      if (today && mins >= today[0] && mins < today[1]) {
+        if (today[1] - mins <= CLOSING_SOON_MINS) { cls = "is-closing"; label = "Closing Soon"; }
+        else { cls = "is-open"; label = "Open"; }
+      }
+      el.className = `loc-status ready ${cls}`;
+      el.textContent = label;
+    });
+  };
+
+  update();
+  setInterval(update, 60000); // re-check every minute
+</script>

@@ -1,39 +1,64 @@
 ---
 import Base from "../layouts/Base.astro";
 import PageHeader from "../components/PageHeader.astro";
-// TODO: replace with real open roles (or pull from an ATS later).
-const roles = [
-  { title: "Line Cook", location: "Charlotte, NC", type: "Full-time" },
-  { title: "Counter / Cashier", location: "Charlotte, NC", type: "Part-time" },
-  { title: "Shift Lead", location: "Charlotte, NC", type: "Full-time" },
+import { getCollection } from "astro:content";
+
+const locations = await getCollection("locations");
+
+const values = [
+  "Live the Golden Rule",
+  "Create healthy growth",
+  "Honor families",
+  "Give generously",
+  "Provide restoration",
+  "Add value to the team",
 ];
 ---
-<Base title="Careers — Bossy Beulah's" description="Join the Beulah's crew. We're hiring in Charlotte.">
-  <PageHeader kicker="join the crew" title="CAREERS" bg="var(--salmon)" />
-  <div class="careers">
-    <p class="intro">We keep it simple, we keep it bossy, and we take care of our people. If that sounds like you, come work the counter or the fryer.</p>
-    <ul class="roles">
-      {roles.map((r) => (
+<Base title="Careers — Bossy Beulah's" description="Join the Bossy Beulah's team. We're hiring across Charlotte, Fort Mill, Winston-Salem & more.">
+  <PageHeader kicker="join the crew" title="JOIN OUR TEAM" bg="var(--salmon)" />
+
+  <article class="careers">
+    <p class="lead">Bossy Beulah's is a modern restaurant with an old soul.</p>
+    <p>We serve a limited menu to allow us to focus on the details — high-quality ingredients, cleanliness, and hospitality. But above all, our job is to take care of people. We serve our guests and each other with respect, humility, and passion, as part of <a href="https://www.noblefoodandpursuits.com/" target="_blank" rel="noopener">Noble Food &amp; Pursuits</a> — one of the most well-known restaurant groups in the Southeast.</p>
+
+    <h2 class="sec-title">What we look for</h2>
+    <ul class="values">
+      {values.map((v) => <li>{v}</li>)}
+    </ul>
+
+    <h2 class="sec-title">Where we're hiring</h2>
+    <ul class="hiring">
+      {locations.map((l) => (
         <li>
           <div>
-            <h3>{r.title}</h3>
-            <p>{r.location} · {r.type}</p>
+            <h3>{l.data.name}</h3>
+            <p>{l.data.address} · {l.data.city}</p>
           </div>
-          <a class="btn" href="mailto:jobs@bossybeulahs.com?subject=Application">Apply</a>
+          {l.data.applyUrl
+            ? <a class="btn" href={l.data.applyUrl} target="_blank" rel="noopener">Apply Now</a>
+            : <span class="soon">Coming soon</span>}
         </li>
       ))}
     </ul>
-    <p class="note">Placeholder roles — swap for real openings or connect an ATS.</p>
-  </div>
+  </article>
 </Base>
 
 <style>
-  .careers{max-width:760px;margin:0 auto;padding:56px 24px 96px}
-  .intro{font-size:18px;line-height:1.6;color:var(--ink);margin-bottom:32px}
-  .roles{list-style:none}
-  .roles li{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 0;border-top:1px solid #efe7da}
-  .roles li:last-child{border-bottom:1px solid #efe7da}
-  .roles h3{font-family:var(--font-display);color:var(--navy);font-size:22px}
-  .roles li > div p{color:var(--ink-soft);font-size:14px;margin-top:2px}
-  .note{margin-top:28px;font-size:12px;color:var(--coral)}
+  .careers{max-width:740px;margin:0 auto;padding:56px 24px 96px}
+  .careers .lead{font-family:var(--font-display);color:var(--coral);font-size:clamp(26px,4.5vw,38px);line-height:1.05;margin-bottom:20px}
+  .careers > p{font-size:18px;line-height:1.7;color:var(--ink);margin-bottom:20px}
+  .careers a{color:var(--coral);font-weight:600}
+  .sec-title{font-family:var(--font-display);color:var(--navy);font-size:clamp(24px,4vw,34px);margin:44px 0 18px}
+
+  .values{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:12px 24px}
+  .values li{position:relative;padding-left:26px;font-weight:600;color:var(--navy);font-size:16px}
+  .values li::before{content:"";position:absolute;left:0;top:6px;width:13px;height:13px;border-radius:50%;background:var(--coral)}
+  @media(max-width:560px){ .values{grid-template-columns:1fr} }
+
+  .hiring{list-style:none}
+  .hiring li{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 0;border-top:1px solid #efe7da}
+  .hiring li:last-child{border-bottom:1px solid #efe7da}
+  .hiring h3{font-family:var(--font-display);color:var(--navy);font-size:21px}
+  .hiring li > div p{color:var(--ink-soft);font-size:14px;margin-top:2px}
+  .hiring .soon{color:var(--ink-soft);font-style:italic}
 </style>

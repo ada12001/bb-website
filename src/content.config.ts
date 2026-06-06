@@ -27,6 +27,7 @@ const locations = defineCollection({
     phone: z.string().optional(),
     mapUrl: z.string().optional(),
     orderUrl: z.string().url().optional(),
+    applyUrl: z.string().url().optional(),
     placeholder: z.boolean().optional(),
   }),
 });

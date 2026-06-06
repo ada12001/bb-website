@@ -43,9 +43,10 @@ button{font-family:inherit}
 .nav{
   position:fixed;top:0;left:0;right:0;z-index:100;
   display:flex;align-items:center;justify-content:space-between;
-  padding:18px 28px;
+  padding:12px 28px;
 }
-.nav .logo{height:34px}
+.nav .logo{height:85px}
+@media(max-width:640px){ .nav .logo{height:64px} }
 .nav-links{display:flex;gap:26px;align-items:center}
 .nav-links a{
   font-weight:700;text-transform:uppercase;letter-spacing:.08em;
