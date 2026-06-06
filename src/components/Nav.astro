@@ -1,6 +1,7 @@
 ---
 const links = [
   { href: "/menu", label: "Menu" },
+  { href: "/catering", label: "Catering" },
   { href: "/rewards", label: "Rewards" },
   { href: "/story", label: "Our Story" },
   { href: "/locations", label: "Locations" },
@@ -12,9 +13,14 @@ const links = [
     <img class="logo logo--coral" src="/img/logo-coral.png" alt="Bossy Beulah's Chicken Shack" />
     <img class="logo logo--white" src="/img/logo-white.png" alt="" aria-hidden="true" />
   </a>
-  <div class="nav-links">
-    {links.map((l) => <a href={l.href}>{l.label}</a>)}
+  <div class="nav-right">
+    <div class="nav-links" id="navMenu">
+      {links.map((l) => <a href={l.href}>{l.label}</a>)}
+    </div>
     <a href="/order" class="order-btn" data-order>Order Now</a>
+    <button class="nav-toggle" id="navToggle" type="button" aria-label="Toggle menu" aria-expanded="false" aria-controls="navMenu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
 
@@ -43,5 +49,19 @@ const links = [
     update();
     // re-check shortly after load in case fonts/images shift section heights
     window.addEventListener("load", () => setTimeout(update, 50));
+  }
+
+  // Mobile menu (hamburger) toggle
+  const toggle = document.getElementById("navToggle");
+  const menu = document.getElementById("navMenu");
+  if (toggle && menu) {
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute("aria-expanded", String(open));
+      menu.classList.toggle("open", open);
+    };
+    toggle.addEventListener("click", () => setOpen(toggle.getAttribute("aria-expanded") !== "true"));
+    menu.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => setOpen(false)));
+    window.addEventListener("resize", () => { if (window.innerWidth > 900) setOpen(false); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") setOpen(false); });
   }
 </script>
