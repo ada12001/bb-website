@@ -54,7 +54,7 @@
     <div class="rcopy" id="rcopy2">
       <div class="rc-kicker">bring the heat</div>
       <div class="rc-name">Hot Thigh Sandwich</div>
-      <div class="rc-desc">Juicy fried thigh, Beaut's hot sauce, Duke's mayo &amp; pickles on a potato bun.</div>
+      <div class="rc-desc">Juicy fried thigh, Beaut's hot sauce, Duke's mayo &amp; pickles.</div>
       <div class="rc-price">9.99 <span>· combo +5.99</span></div>
       <a href="/order" class="rc-btn" data-order="hot-thigh">Add to order</a>
     </div>
@@ -148,6 +148,17 @@
 
   /* feathered floral wipe */
   .curtain{position:absolute;top:0;left:50%;height:100%;width:165vw;transform:translateX(-50%);z-index:50;opacity:0;pointer-events:none;background-repeat:repeat;background-position:center;background-size:440px auto;will-change:transform,opacity;-webkit-mask-image:linear-gradient(to right,transparent 0%,#000 17%,#000 83%,transparent 100%);mask-image:linear-gradient(to right,transparent 0%,#000 17%,#000 83%,transparent 100%)}
+
+  /* short phones: smaller food + lower, tighter copy so the copy never reaches the
+     food (placed last so it overrides the base mobile rules above) */
+  @media(max-width:820px) and (max-height:730px){
+    .sandwich{width:min(44vh,58vw)!important;height:min(44vh,58vw)!important}
+    .rimg{width:min(48vh,60vw)!important;height:min(48vh,60vw)!important}
+    .recipe{top:13vh}
+    .rcopy{bottom:3%}
+    .rcopy .rc-desc{margin-bottom:9px}
+    .rcopy .rc-price{margin-bottom:9px}
+  }
 </style>
 
 <script>

@@ -58,7 +58,9 @@ const links = [
       nav.style.pointerEvents = prev;
       while (el && el !== document.documentElement) {
         const c = parseRGB(getComputedStyle(el).backgroundColor);
-        if (c) return c;
+        // only treat near-full-width elements as the section background; ignore small
+        // floating UI like the "In the kitchen" caption pill or buttons
+        if (c && el.getBoundingClientRect().width >= window.innerWidth * 0.7) return c;
         el = el.parentElement;
       }
       return [250, 244, 234]; // cream
