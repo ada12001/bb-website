@@ -78,11 +78,13 @@ const links = [
       // button coral when it sits over a dark (e.g. navy) background.
       const bg = sampleBg();
       document.body.classList.toggle("nav-bg-dark", lum(bg) < 0.32);
-      // If a sticker's colour is too close to the current background (e.g. Rewards'
-      // coral over the coral header), fall back to a navy sticker so it stays visible.
+      // Only fall back to a navy sticker when the sticker colour is essentially the
+      // SAME as the background it sits on (e.g. Rewards' coral over the coral header,
+      // Locations' periwinkle over the periwinkle header). Distinct-but-related hues
+      // (periwinkle vs mint ~39 apart) keep their own colour.
       for (const a of navLinks) {
         const hl = a.dataset.hl;
-        const blends = !!hl && dist(hexRGB(hl), bg) < 80;
+        const blends = !!hl && dist(hexRGB(hl), bg) < 30;
         a.classList.toggle("hl-fallback", blends);
       }
     };
