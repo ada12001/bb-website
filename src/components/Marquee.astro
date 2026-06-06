@@ -1,5 +1,7 @@
 ---
-// Repeats the phrase set twice so the -50% scroll loops seamlessly.
+// The track is two identical halves and scrolls -50% to loop seamlessly.
+// Each half repeats the phrase set 3x so a single half is always wider than the
+// viewport (even on ultrawide) — otherwise the loop shows a gap on wide screens.
 interface Props { items?: string[]; }
 const { items = [
   "THE BOSSIER THE BETTER",
@@ -7,7 +9,8 @@ const { items = [
   "SINCE 1906",
   "NO SUCH THING AS TOO MANY PICKLES",
 ] } = Astro.props;
-const loop = [...items, ...items];
+const half = [...items, ...items, ...items];
+const loop = [...half, ...half];
 ---
 <div class="marquee" aria-hidden="true" data-nav-theme="light">
   <div class="track">
