@@ -45,13 +45,16 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
       if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
         window.addEventListener("touchstart", (e) => {
           for (const t of Array.from(e.changedTouches)) {
-            const g = document.createElement("div");
-            g.className = "touch-glow";
-            g.style.left = t.clientX + "px";
-            g.style.top = t.clientY + "px";
-            document.body.appendChild(g);
-            requestAnimationFrame(() => g.classList.add("on"));
-            setTimeout(() => g.remove(), 700);
+            // two layers: screen-blend (pops on dark) + normal-blend (pops on light)
+            for (const cls of ["touch-glow", "touch-glow soft"]) {
+              const g = document.createElement("div");
+              g.className = cls;
+              g.style.left = t.clientX + "px";
+              g.style.top = t.clientY + "px";
+              document.body.appendChild(g);
+              requestAnimationFrame(() => g.classList.add("on"));
+              setTimeout(() => g.remove(), 700);
+            }
           }
         }, { passive: true });
       }

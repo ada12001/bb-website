@@ -134,6 +134,9 @@ body.nav-bg-dark .nav .order-btn{background:var(--coral);box-shadow:0 6px 18px r
   background:radial-gradient(circle, rgba(255,255,255,.5) 0%, rgba(240,83,72,.42) 28%, rgba(240,83,72,.16) 52%, rgba(240,83,72,0) 72%);
   opacity:0;transform:scale(.35);will-change:transform,opacity;mix-blend-mode:screen;
 }
+/* second layer with normal blend so the glow is also visible on LIGHT backgrounds
+   (the screen-blend layer above only shows on dark ones) */
+.touch-glow.soft{mix-blend-mode:normal;background:radial-gradient(circle, rgba(240,83,72,.4) 0%, rgba(240,83,72,.2) 46%, rgba(240,83,72,0) 70%)}
 .touch-glow.on{animation:touchGlow .62s ease-out forwards}
 @keyframes touchGlow{0%{opacity:.95;transform:scale(.35)}100%{opacity:0;transform:scale(1.7)}}
 @media(prefers-reduced-motion: reduce){ .touch-glow{display:none} }
