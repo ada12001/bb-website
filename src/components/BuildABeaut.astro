@@ -88,11 +88,12 @@
   .scrim{position:absolute;left:0;top:0;bottom:0;z-index:2;pointer-events:none;width:0}
   @media(max-width:820px){ .scrim{display:none} }
 
-  /* Below 820px the copy is hidden, so the food gets centered and can use more
-     width than the two-column (48vw) cap above allows. */
+  /* Below 820px the food is centered; the checklist sits above it and the copy
+     card below it (see positioning in the mobile blocks). Keep the food modest so
+     both fit comfortably. */
   @media(max-width:820px){
-    .sandwich{width:min(72vh,86vw)!important;height:min(72vh,86vw)!important}
-    .rimg{width:min(78vh,90vw)!important;height:min(78vh,90vw)!important}
+    .sandwich{width:min(58vh,72vw)!important;height:min(58vh,72vw)!important}
+    .rimg{width:min(62vh,76vw)!important;height:min(62vh,76vw)!important}
   }
 
   .sandwich{position:relative;width:min(84vh,680px,48vw);height:min(84vh,680px,48vw);z-index:5;filter:var(--shadow-food)}
@@ -109,7 +110,12 @@
   .recipe li.on{color:var(--navy);transform:translateX(5px)}
   .recipe li.on .dot{background:var(--coral);border-color:var(--coral)}
   .recipe li.on .dot::after{content:"";position:absolute;left:5px;top:1px;width:6px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
-  @media(max-width:820px){ .recipe{display:none} }
+  @media(max-width:820px){
+    .recipe{display:block;left:50%;right:auto;top:11vh;width:auto;max-width:86vw;z-index:21}
+    .recipe h4{text-align:center;margin-bottom:14px}
+    .recipe li{font-size:16px;margin:11px 0;gap:12px}
+    .recipe li .dot{width:18px;height:18px}
+  }
 
   .prail{position:absolute;right:max(26px,3.5vw);top:50%;transform:translateY(-50%);height:200px;width:4px;background:rgba(30,35,73,.12);border-radius:4px;z-index:20}
   .prail .fill{position:absolute;top:0;left:0;width:100%;background:var(--coral);border-radius:4px;height:0%}
@@ -131,7 +137,14 @@
   #rcopy2 .rc-kicker{color:var(--navy)} #rcopy2 .rc-name{color:#fff} #rcopy2 .rc-desc{color:#ffe9e4}
   #rcopy2 .rc-price{color:#fff} #rcopy2 .rc-price span{color:#ffd6cf}
   #rcopy2 .rc-btn{background:var(--navy);box-shadow:0 8px 20px rgba(30,35,73,.4)}
-  @media(max-width:820px){ .rcopy{display:none} }
+  @media(max-width:820px){
+    .rcopy{display:block;left:50%;right:auto;top:auto;bottom:6%;width:min(88vw,400px);text-align:center;z-index:21}
+    .rcopy .rc-kicker{font-size:26px}
+    .rcopy .rc-name{font-size:clamp(34px,9vw,46px);margin-bottom:10px}
+    .rcopy .rc-desc{margin:0 auto 14px;max-width:32ch}
+    .rcopy .rc-price{font-size:21px;margin-bottom:14px}
+    .rcopy .rc-btn{padding:14px 30px}
+  }
 
   /* feathered floral wipe */
   .curtain{position:absolute;top:0;left:50%;height:100%;width:165vw;transform:translateX(-50%);z-index:50;opacity:0;pointer-events:none;background-repeat:repeat;background-position:center;background-size:440px auto;will-change:transform,opacity;-webkit-mask-image:linear-gradient(to right,transparent 0%,#000 17%,#000 83%,transparent 100%);mask-image:linear-gradient(to right,transparent 0%,#000 17%,#000 83%,transparent 100%)}
@@ -235,6 +248,10 @@
     const fadeImg = (i: number) => clamp(1.25 - Math.abs(i - pos) * 1.40, 0, 1);
     const fadeName = (i: number) => clamp(1.15 - Math.abs(i - pos) * 1.75, 0, 1);
     const fadeCopy = (i: number) => clamp(1.20 - Math.abs(i - pos) * 1.55, 0, 1);
+    // On mobile the cards stack at a fixed centre (no horizontal slide), so use a
+    // sharp crossfade — only the current item shows; transitions happen under the wipe.
+    const mobile = !copyVisible;
+    const fadeCopyM = (i: number) => clamp(1.7 - Math.abs(i - pos) * 3.2, 0, 1);
 
     const ox0 = railOn ? off(0) : 0;
     sandwichEl.style.transform = `translateX(${ox0 + restShift}px) scale(${(lerp(1, 1.03, easeOutCubic(done)) * (railOn ? scl(0) : 1)).toFixed(3)})`;
@@ -249,10 +266,10 @@
     const copyShow = inv(hand, 0.5, 0.82);   // copy in after the beat, fully up well before it slides
     const recipeLift = lerp(0, -12, easeOutCubic(recipeFade));
     const copyRise = lerp(14, 0, easeOutCubic(copyShow));
-    recipeEl.style.transform = `translate(${ox0}px,calc(-50% + ${recipeLift}px))`;
+    recipeEl.style.transform = mobile ? `translateX(-50%)` : `translate(${ox0}px,calc(-50% + ${recipeLift}px))`;
     recipeEl.style.opacity = String(1 - recipeFade);
-    beautCopy.style.transform = `translate(${ox0}px,calc(-50% + ${copyRise}px))`;
-    beautCopy.style.opacity = String(Math.min(copyShow, railOn ? fadeCopy(0) : 1));
+    beautCopy.style.transform = mobile ? `translateX(-50%)` : `translate(${ox0}px,calc(-50% + ${copyRise}px))`;
+    beautCopy.style.opacity = String(Math.min(copyShow, railOn ? (mobile ? fadeCopyM(0) : fadeCopy(0)) : 1));
     prailBox.style.opacity = String(1 - recipeFade);
     bgword.style.transform = `translate(calc(-50% + ${ox0 * PARALLAX + restShift}px),-50%)`;
     bgword.style.opacity = String((railOn ? fadeName(0) : 1) * 0.24);
@@ -263,8 +280,8 @@
       railNames[k].style.opacity = String((railOn ? fadeName(i) : 0) * 0.55);
       railImgs[k].style.transform = `translate(calc(-50% + ${off(i) + restShift}px),-50%) scale(${scl(i).toFixed(3)})`;
       railImgs[k].style.opacity = String(railOn ? fadeImg(i) : 0);
-      railCopy[k].style.transform = `translate(${off(i)}px,-50%)`;
-      railCopy[k].style.opacity = String(railOn ? fadeCopy(i) : 0);
+      railCopy[k].style.transform = mobile ? `translateX(-50%)` : `translate(${off(i)}px,-50%)`;
+      railCopy[k].style.opacity = String(railOn ? (mobile ? fadeCopyM(i) : fadeCopy(i)) : 0);
     }
 
     // floral wipe
