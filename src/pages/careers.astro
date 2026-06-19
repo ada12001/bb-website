@@ -7,25 +7,35 @@ const locations = await getCollection("locations");
 
 const values = [
   "Live the Golden Rule",
-  "Create healthy growth",
-  "Honor families",
   "Give generously",
+  "Create healthy growth",
   "Provide restoration",
+  "Honor families",
   "Add value to the team",
 ];
 ---
 <Base title="Careers — Bossy Beulah's" description="Join the Bossy Beulah's team. We're hiring across Charlotte, Fort Mill, Winston-Salem & more.">
-  <PageHeader kicker="join the crew" title="JOIN OUR TEAM" bg="var(--salmon)" navTheme="light" />
+  <PageHeader kicker="serve somethin' special" title="JOIN OUR TEAM" image="/img/careers-floral.jpg" />
 
-  <article class="careers">
-    <p class="lead">Bossy Beulah's is a modern restaurant with an old soul.</p>
-    <p>We serve a limited menu to allow us to focus on the details — high-quality ingredients, cleanliness, and hospitality. But above all, our job is to take care of people. We serve our guests and each other with respect, humility, and passion, as part of <a href="https://www.noblefoodandpursuits.com/" target="_blank" rel="noopener">Noble Food &amp; Pursuits</a> — one of the most well-known restaurant groups in the Southeast.</p>
+  <section class="cr-intro">
+    <div class="cr-intro-grid">
+      <div class="cr-copy">
+        <h2 class="cr-h">A modern restaurant<br />with an old soul.</h2>
+        <p>We serve a limited menu to allow us to focus on the details — high-quality ingredients, cleanliness, and hospitality. But above all, our job is to take care of people. We serve our guests and each other with respect, humility, and passion, as part of <a href="https://www.noblefoodandpursuits.com/" target="_blank" rel="noopener">Noble Food &amp; Pursuits</a> — one of the most well-known restaurant groups in the Southeast.</p>
+      </div>
+      <figure class="cr-photo"><img src="/img/careers-chef.jpg" alt="A Bossy Beulah's team member in the kitchen" /></figure>
+    </div>
+  </section>
 
-    <h2 class="sec-title">What we look for</h2>
-    <ul class="values">
+  <section class="cr-noble" data-nav-theme="light">
+    <p class="cr-noble-kicker">what we look for</p>
+    <h2 class="cr-noble-title">The Noble Way</h2>
+    <ul class="cr-values">
       {values.map((v) => <li>{v}</li>)}
     </ul>
+  </section>
 
+  <section class="cr-hiring-wrap">
     <h2 class="sec-title">Where we're hiring</h2>
     <ul class="hiring">
       {locations.map((l) => (
@@ -40,21 +50,32 @@ const values = [
         </li>
       ))}
     </ul>
-  </article>
+  </section>
 </Base>
 
 <style>
-  .careers{max-width:740px;margin:0 auto;padding:56px 24px 96px}
-  .careers .lead{font-family:var(--font-display);color:var(--coral);font-size:clamp(26px,4.5vw,38px);line-height:1.05;margin-bottom:20px}
-  .careers > p{font-size:18px;line-height:1.7;color:var(--ink);margin-bottom:20px}
-  .careers a:not(.btn){color:var(--coral);font-weight:600}
-  .sec-title{font-family:var(--font-display);color:var(--navy);font-size:clamp(24px,4vw,34px);margin:44px 0 18px}
+  /* Intro: copy + team photo */
+  .cr-intro{max-width:var(--maxw);margin:0 auto;padding:64px 24px 8px}
+  .cr-intro-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(28px,5vw,64px);align-items:center}
+  .cr-h{font-family:var(--font-display);color:var(--coral);font-size:clamp(30px,4.6vw,52px);line-height:1.02;margin-bottom:18px}
+  .cr-copy p{font-size:18px;line-height:1.7;color:var(--ink)}
+  .cr-copy a:not(.btn){color:var(--coral);font-weight:700}
+  .cr-photo{margin:0;border-radius:18px;overflow:hidden;box-shadow:0 28px 56px rgba(60,30,20,.20)}
+  .cr-photo img{width:100%;height:100%;object-fit:cover;aspect-ratio:4/5;display:block}
+  @media(max-width:780px){ .cr-intro-grid{grid-template-columns:1fr;gap:28px} .cr-photo img{aspect-ratio:3/2} }
 
-  .values{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:12px 24px}
-  .values li{position:relative;padding-left:26px;font-weight:600;color:var(--navy);font-size:16px}
-  .values li::before{content:"";position:absolute;left:0;top:6px;width:13px;height:13px;border-radius:50%;background:var(--coral)}
-  @media(max-width:560px){ .values{grid-template-columns:1fr} }
+  /* The Noble Way — coral band with value pills */
+  .cr-noble{background:var(--coral);color:#fff;text-align:center;padding:clamp(56px,8vw,84px) 24px;margin-top:56px}
+  .cr-noble-kicker{font-family:var(--font-script);color:#ffe2d6;font-size:clamp(22px,3vw,30px);transform:rotate(-2deg);margin-bottom:2px}
+  .cr-noble-title{font-family:var(--font-display);color:#fff;font-size:clamp(34px,6vw,60px);line-height:1;margin-bottom:34px}
+  .cr-values{list-style:none;max-width:760px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:14px 18px}
+  .cr-values li{border:2px solid rgba(255,255,255,.55);border-radius:var(--radius-pill);padding:14px 22px;font-weight:700;letter-spacing:.02em;font-size:clamp(14px,1.6vw,17px);transition:background .2s ease,color .2s ease}
+  .cr-values li:hover{background:#fff;color:var(--coral)}
+  @media(max-width:560px){ .cr-values{grid-template-columns:1fr} }
 
+  /* Where we're hiring */
+  .cr-hiring-wrap{max-width:740px;margin:0 auto;padding:64px 24px 96px}
+  .sec-title{font-family:var(--font-display);color:var(--navy);font-size:clamp(24px,4vw,34px);margin:0 0 18px}
   .hiring{list-style:none}
   .hiring li{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 0;border-top:1px solid #efe7da}
   .hiring li:last-child{border-bottom:1px solid #efe7da}

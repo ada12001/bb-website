@@ -1,34 +1,122 @@
 ---
 import Base from "../layouts/Base.astro";
 import PageHeader from "../components/PageHeader.astro";
+
+const timeline = [
+  { year: "1906",  label: "Aunt Beaut is born",            icon: "/img/timeline/timeline-icon-1.png" },
+  { year: "1950s", label: "Family dinners, secret recipes", icon: "/img/timeline/timeline-icon-2.png" },
+  { year: "1980s", label: "Techniques passed down",         icon: "/img/timeline/timeline-icon-3.png" },
+  { year: "2020",  label: "Bossy Beulah's is born",         icon: "/img/timeline/timeline-icon-4.png" },
+  { year: "Today", label: "Still fresh, still Bossy",       icon: "/img/timeline/timeline-icon-5.png" },
+];
+
+// "The Art of the Beaut" — final imagery is still being gathered (Pastel #31);
+// scaffolded here with placeholder chicken art so the section is ready to drop assets into.
+const beautSteps = [
+  { h: "Dipped",      p: "Buttermilk-brined overnight." },
+  { h: "Breaded",     p: "By hand, every single piece." },
+  { h: "Fried fresh", p: "To order, never a minute sooner." },
+  { h: "Topped right",p: "House pickles, Duke's, potato bun." },
+];
 ---
 <Base title="Our Story — Bossy Beulah's" description="Five generations of chicken-sandwich makers, in honor of our great Aunt Beaut. Born 1906.">
-  <PageHeader kicker="you can get away with being bossy when you're right" title="OUR STORY" bg="var(--mint)" />
+  <PageHeader kicker="since 1906" title="OUR STORY" image="/img/story-hero.jpg" />
 
-  <figure class="story-photo">
-    <img
-      src="/img/aunt-beulah.jpg"
-      alt="Aunt Beulah, the matriarch behind Bossy Beulah's, standing outside in a white suit"
-      width="1800"
-      height="1223"
-    />
-    <figcaption>The one, the only — Aunt Beulah.</figcaption>
-  </figure>
+  <!-- The Original Boss -->
+  <section class="ob">
+    <div class="ob-grid">
+      <figure class="ob-photo">
+        <img class="ob-gif" src="/img/bossy.gif" alt="" aria-hidden="true" />
+        <img src="/img/aunt-beulah.jpg" alt="Aunt Beaut, the matriarch behind Bossy Beulah's, standing outside in a white suit" />
+      </figure>
+      <div class="ob-copy">
+        <p class="ob-kicker">meet Aunt Beaut</p>
+        <h2 class="ob-title">The Original Boss</h2>
+        <p>Our great Aunt Beaut, born in 1906, is the one who elevated our family's chicken sandwich craft to an art form. We fondly dubbed her Bossy — and Bossy Beaut was always right, especially when it came to her world-famous fried chicken sammie.</p>
+        <p>In her spirit, we are one thing: a no-nonsense chicken sandwich. All-natural chicken, served spanking-fresh, dipped in buttermilk and breaded by hand to seal in the juices, with just enough seasoning to complement the natural flavor without stealing the show.</p>
+      </div>
+    </div>
+  </section>
 
-  <article class="story">
-    <p class="lead">Bossy Beulah's is the culmination of five solid generations of chicken sandwich makers.</p>
-    <p>Our great Aunt Beaut, born in 1906, is the one who elevated our family's chicken sandwich craft to an art form. We fondly dubbed her Bossy, but as Aunt Beaut was famous for saying, <em>"You can get away with being bossy when you're right."</em> And Bossy Beaut was always right — especially when it came to making her world-famous fried chicken sammie.</p>
-    <p>In the spirit of Aunt Beaut, we are one thing… a no-nonsense chicken sandwich. Our all-natural chicken is served spanking-fresh, dipped in buttermilk and breaded by hand to seal in the juices. We add just enough seasoning to complement the natural flavor without stealing the show (because nobody likes a show-off). To top it off, we pair it with a potato bun, signature house-made pickles, and mayo — Duke's, of course.</p>
-    <p>Everything we do is in honor of our great Aunt Beaut. Her legacy is the heart and soul behind Bossy Beulah's simplistic menu, bold brand, and inviting space. That's exactly how Bossy would've liked it. And like we said — Bossy is always right.</p>
-  </article>
+  <!-- Bossy pull-quote -->
+  <section class="ob-quote">
+    <blockquote>"You can get away with being bossy when you're right."</blockquote>
+    <p class="ob-quote-sign">— Aunt Beaut</p>
+  </section>
+
+  <!-- Five-generation timeline -->
+  <section class="tl">
+    <h2 class="tl-title">A legacy that spans five generations</h2>
+    <ol class="tl-row">
+      {timeline.map((t) => (
+        <li class="tl-step">
+          <img class="tl-icon" src={t.icon} alt="" aria-hidden="true" />
+          <div class="tl-year">{t.year}</div>
+          <div class="tl-label">{t.label}</div>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <!-- The Art of the Beaut -->
+  <section class="aotb" data-nav-theme="light">
+    <p class="aotb-kicker">what we look for in every bird</p>
+    <h2 class="aotb-title">The Art of the Beaut</h2>
+    <div class="aotb-grid">
+      {beautSteps.map((s) => (
+        <div class="aotb-card">
+          <div class="aotb-img"><img src="/img/chicken.png" alt={s.h} /></div>
+          <h3>{s.h}</h3>
+          <p>{s.p}</p>
+        </div>
+      ))}
+    </div>
+    <a href="/order" class="btn btn--navy aotb-cta" data-order>Order Now</a>
+  </section>
 </Base>
 
 <style>
-  .story-photo{max-width:920px;margin:48px auto 0;padding:0 24px}
-  .story-photo img{width:100%;height:auto;border-radius:16px;box-shadow:0 22px 50px rgba(30,35,73,.18);display:block}
-  .story-photo figcaption{margin-top:14px;text-align:center;font-family:var(--font-script);color:var(--coral);font-size:clamp(20px,3vw,28px)}
-  .story{max-width:680px;margin:0 auto;padding:40px 24px 96px}
-  .story .lead{font-family:var(--font-display);color:var(--coral);font-size:clamp(24px,4vw,34px);line-height:1.1;margin-bottom:24px}
-  .story p{font-size:18px;line-height:1.7;color:var(--ink);margin-bottom:20px}
-  .story em{font-style:italic;color:var(--navy)}
+  /* The Original Boss */
+  .ob{max-width:var(--maxw);margin:0 auto;padding:clamp(56px,8vw,88px) 24px 8px}
+  .ob-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(32px,5vw,72px);align-items:center}
+  .ob-photo{position:relative;margin:0}
+  .ob-photo > img:not(.ob-gif){width:100%;height:auto;border-radius:16px;box-shadow:0 22px 50px rgba(30,35,73,.18);display:block}
+  .ob-gif{position:absolute;top:-26px;left:-26px;width:clamp(86px,12vw,132px);height:auto;z-index:2;border-radius:10px;transform:rotate(-4deg)}
+  .ob-kicker{font-family:var(--font-script);color:var(--mint);font-size:clamp(24px,3vw,32px);transform:rotate(-2deg);margin-bottom:2px}
+  .ob-title{font-family:var(--font-display);color:var(--navy);font-size:clamp(34px,5vw,58px);line-height:.98;margin-bottom:18px}
+  .ob-copy p{font-size:18px;line-height:1.7;color:var(--ink);margin-bottom:16px}
+  @media(max-width:780px){ .ob-grid{grid-template-columns:1fr;gap:40px} .ob-gif{top:-18px;left:-14px} }
+
+  /* Pull-quote */
+  .ob-quote{max-width:900px;margin:0 auto;padding:clamp(48px,7vw,86px) 24px;text-align:center}
+  .ob-quote blockquote{font-family:var(--font-display);color:var(--coral);font-size:clamp(30px,5.4vw,64px);line-height:1.02;letter-spacing:.01em}
+  .ob-quote-sign{font-family:var(--font-script);color:var(--navy);font-size:clamp(22px,3vw,32px);margin-top:14px;transform:rotate(-2deg)}
+
+  /* Timeline */
+  .tl{background:var(--peach);padding:clamp(54px,7vw,82px) 24px}
+  .tl-title{font-family:var(--font-display);color:var(--navy);text-align:center;font-size:clamp(26px,4.4vw,42px);line-height:1;margin-bottom:44px}
+  .tl-row{list-style:none;max-width:var(--maxw);margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:22px}
+  .tl-step{text-align:center;position:relative}
+  .tl-step:not(:last-child)::after{content:"";position:absolute;top:34px;left:calc(50% + 40px);right:calc(-50% + 40px);height:2px;background:rgba(30,35,73,.22)}
+  .tl-icon{width:68px;height:68px;object-fit:contain;margin:0 auto 14px;position:relative;z-index:1}
+  .tl-year{font-family:var(--font-display);color:var(--coral);font-size:clamp(22px,2.6vw,30px);line-height:1}
+  .tl-label{color:var(--navy);font-weight:700;font-size:14px;line-height:1.35;margin-top:6px;max-width:18ch;margin-inline:auto}
+  @media(max-width:720px){
+    .tl-row{grid-template-columns:1fr 1fr;gap:32px 18px}
+    .tl-step::after{display:none}
+  }
+
+  /* The Art of the Beaut */
+  .aotb{background:var(--coral);color:#fff;text-align:center;padding:clamp(56px,8vw,88px) 24px}
+  .aotb-kicker{font-family:var(--font-script);color:#ffe2d6;font-size:clamp(22px,3vw,30px);transform:rotate(-2deg);margin-bottom:2px}
+  .aotb-title{font-family:var(--font-display);color:#fff;font-size:clamp(32px,6vw,58px);line-height:1;margin-bottom:40px}
+  .aotb-grid{max-width:var(--maxw);margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+  .aotb-card{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:18px;padding:18px 18px 24px}
+  .aotb-img{width:100%;aspect-ratio:1;border-radius:12px;overflow:hidden;margin-bottom:14px;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.06)}
+  .aotb-img img{width:100%;height:100%;object-fit:contain}
+  .aotb-card h3{font-family:var(--font-display);color:#fff;font-size:clamp(22px,2.4vw,28px);line-height:1;margin-bottom:6px}
+  .aotb-card p{color:#ffe6df;font-size:14px;line-height:1.45}
+  .aotb-cta{margin-top:40px}
+  @media(max-width:760px){ .aotb-grid{grid-template-columns:1fr 1fr} }
+  @media(max-width:440px){ .aotb-grid{grid-template-columns:1fr} }
 </style>

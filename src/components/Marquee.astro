@@ -2,21 +2,24 @@
 // The track is two identical halves and scrolls -50% to loop seamlessly.
 // Each half repeats the phrase set 3x so a single half is always wider than the
 // viewport (even on ultrawide) — otherwise the loop shows a gap on wide screens.
-interface Props { items?: string[]; }
+// Phrases alternate between a hand-script face and the textured display face,
+// matching the brand crawler treatment (peach bar, navy type, coral diamonds).
+interface Item { t: string; font: "script" | "display"; }
+interface Props { items?: Item[]; }
 const { items = [
-  "THE BOSSIER THE BETTER",
-  "RESPECT THE PICKLES",
-  "SINCE 1906",
-  "NO SUCH THING AS TOO MANY PICKLES",
+  { t: "The Bossier the Better", font: "script" },
+  { t: "Since 1906", font: "display" },
+  { t: "Respect the Pickles", font: "script" },
+  { t: "No Such Thing as Too Many Pickles", font: "display" },
 ] } = Astro.props;
 const half = [...items, ...items, ...items];
 const loop = [...half, ...half];
 ---
 <div class="marquee" aria-hidden="true" data-nav-theme="light">
   <div class="track">
-    {loop.map((t, i) => (
+    {loop.map((item) => (
       <>
-        <span class={i % 2 === 0 ? "c" : ""}>{t}</span><span>&#10022;</span>
+        <span class={item.font}>{item.t}</span><span class="sep">&#10022;</span>
       </>
     ))}
   </div>

@@ -5,7 +5,7 @@ import { getCollection } from "astro:content";
 const locations = await getCollection("locations");
 ---
 <Base title="Locations — Bossy Beulah's" description="Find your nearest Bossy Beulah's Chicken Shack — hours, directions, and online ordering.">
-  <PageHeader kicker="come on in" title="LOCATIONS" bg="var(--periwinkle)" />
+  <PageHeader kicker="come on in" title="LOCATIONS" image="/img/locations-hero.jpg" />
 
   <div class="locs">
     {locations.map((l) => (
