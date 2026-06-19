@@ -25,9 +25,10 @@
   --accent:     var(--coral);
 
   /* ---- Type families ---- */
-  --font-display: "Milkstore", Impact, sans-serif;     /* big textured headlines */
+  --font-display: "Milkstore", Impact, sans-serif;       /* big textured headlines */
   --font-script:  "Palm Canyon", "Palmer Lake", cursive; /* hand-script accents */
-  --font-body:    "DIN Round", system-ui, sans-serif;  /* UI + body */
+  --font-body:    "DIN Round", system-ui, sans-serif;    /* tertiary: buttons, eyebrows */
+  --font-sans:    "sweet-sans-pro", "DIN Round", system-ui, sans-serif; /* body copy (Adobe Fonts) */
 
   /* ---- Type scale (fluid) ---- */
   --step--1: clamp(0.78rem, 0.74rem + 0.2vw, 0.88rem);

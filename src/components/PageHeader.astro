@@ -1,8 +1,10 @@
 ---
-interface Props { kicker?: string; title: string; lead?: string; bg?: string; navTheme?: "light" | "dark"; }
-const { kicker, title, lead, bg = "var(--cream)", navTheme = "dark" } = Astro.props;
+interface Props { kicker?: string; title: string; lead?: string; bg?: string; image?: string; navTheme?: "light" | "dark"; }
+const { kicker, title, lead, bg = "var(--cream)", image, navTheme = "dark" } = Astro.props;
+const hasImg = !!image;
 ---
-<header class="page-header" style={`--ph-bg:${bg}`} data-nav-theme={navTheme}>
+<header class:list={["page-header", { "page-header--img": hasImg }]} style={hasImg ? undefined : `--ph-bg:${bg}`} data-nav-theme={hasImg ? "light" : navTheme}>
+  {hasImg && <div class="ph-media"><img src={image} alt="" /></div>}
   <div class="ph-inner">
     {kicker && <p class="ph-kicker">{kicker}</p>}
     <h1 class="ph-title" set:html={title}></h1>
@@ -18,4 +20,16 @@ const { kicker, title, lead, bg = "var(--cream)", navTheme = "dark" } = Astro.pr
   .page-header[data-nav-theme="light"] .ph-kicker{color:#fff}
   .ph-title{font-family:var(--font-display);color:var(--navy);font-size:clamp(40px,8vw,88px);line-height:.9}
   .ph-lead{margin-top:16px;color:var(--ink-soft);font-weight:500;font-size:17px;line-height:1.6}
+
+  /* ---- Photo header (full-bleed image + overlay + white type) ---- */
+  .page-header--img{position:relative;overflow:hidden;background:var(--navy);color:#fff;
+    min-height:clamp(360px,54vh,580px);display:flex;align-items:center;padding:calc(var(--nav-h) + 40px) 24px 56px}
+  .page-header--img .ph-media{position:absolute;inset:0;z-index:0}
+  .page-header--img .ph-media img{width:100%;height:100%;object-fit:cover;object-position:center}
+  .page-header--img .ph-media::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(15,12,9,.30) 0%,rgba(15,12,9,.30) 40%,rgba(15,12,9,.52) 100%)}
+  .page-header--img .ph-inner{position:relative;z-index:1}
+  .page-header--img .ph-kicker{color:var(--peach)}
+  .page-header--img .ph-title{color:#fff;text-shadow:0 4px 24px rgba(0,0,0,.35)}
+  .page-header--img .ph-lead{color:rgba(255,255,255,.92)}
 </style>
